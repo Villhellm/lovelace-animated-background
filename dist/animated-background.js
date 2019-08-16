@@ -31,11 +31,11 @@ function run() {
 }
 
 function enabled(hass) {
-  if(animatedConfig.included_users){
+  if (animatedConfig.included_users) {
     if (animatedConfig.included_users.includes(hass.user.name)) {
       return true;
     }
-    else{
+    else {
       return false;
     }
   }
@@ -44,11 +44,11 @@ function enabled(hass) {
       return false;
     }
   }
-  if(animatedConfig.included_devices){
+  if (animatedConfig.included_devices) {
     if (animatedConfig.included_devices.some(device_included)) {
       return true;
     }
-    else{
+    else {
       return false;
     }
   }
@@ -66,7 +66,7 @@ function device_included(element, index, array) {
 
 function renderBackgroundHTML(hass) {
   var stateURL = "";
-  if(animatedConfig.entity){
+  if (animatedConfig.entity) {
     var current_state = hass.states[animatedConfig.entity].state;
     if (previous_state != current_state) {
       console.log(current_state);
@@ -75,15 +75,15 @@ function renderBackgroundHTML(hass) {
         stateURL = animatedConfig.state_url[current_state];
       }
       else {
-        if(animatedConfig.default_url){
+        if (animatedConfig.default_url) {
           stateURL = animatedConfig.default_url;
         }
       }
       previous_state = current_state;
-    } 
+    }
   }
-  else{
-    if(animatedConfig.default_url){
+  else {
+    if (animatedConfig.default_url) {
       stateURL = animatedConfig.default_url;
     }
   }
@@ -107,13 +107,15 @@ function renderBackgroundHTML(hass) {
 <div class="bg-wrap">
  <iframe class="bg-video" frameborder="0" src="${stateURL}"/> 
 </div></div>`;
-  var bg = viewLayout.querySelector('[id="background-video"]');
-  if (bg == null) {
-    viewLayout.insertAdjacentHTML("beforeend", htmlToRender);
-  }
-  else {
-    if(animatedConfig.entity){
-      bg.innerHTML = htmlToRender;
+  if (stateURL != "") {
+    var bg = viewLayout.querySelector('[id="background-video"]');
+    if (bg == null) {
+      viewLayout.insertAdjacentHTML("beforeend", htmlToRender);
+    }
+    else {
+      if (animatedConfig.entity) {
+        bg.innerHTML = htmlToRender;
+      }
     }
   }
 }
