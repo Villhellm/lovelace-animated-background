@@ -81,4 +81,6 @@ Configuration for Animated Background goes into the root of your Lovelace config
 | excluded_users | list | **Optional** | Users to be excluded
 | excluded_devices | list | **Optional** | Devices to be excluded
 
+While all entries are optional, it is recommended to at least set `default_url` or `entity` with `state_url`. Without one of those set you would never know this plugin was installed. 
+
 [Troubleshooting](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins)
