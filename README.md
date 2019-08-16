@@ -2,8 +2,9 @@
 
 This module is for [Lovelace](https://www.home-assistant.io/lovelace) on [Home Assistant](https://www.home-assistant.io/)
 
+Create animated backgrounds based on the state of one of your entities. Originally designed for changing with the weather, ala [VideoBackground-Card](https://github.com/Perdemot/Lovelace-Cards/tree/master/VideoBackground-Card), you can now choose any entity in home assistant and create an animated background for each of its states.
 
-A big thanks to [CCH](https://github.com/maykar/compact-custom-header) and [VideoBackground-Card](https://github.com/Perdemot/Lovelace-Cards/tree/master/VideoBackground-Card) for the inspiration. All example animation files used in this repo are originally from the VideoBackground-Card repo. 
+A big thanks to [CCH](https://github.com/maykar/compact-custom-header) and [VideoBackground-Card](https://github.com/Perdemot/Lovelace-Cards/tree/master/VideoBackground-Card) for the inspiration. All example animation files used in this repo are originally from the VideoBackground-Card repo.
 
 Example:
 ![Example](https://raw.githubusercontent.com/Villhellm/README_images/master/Animation.gif)
