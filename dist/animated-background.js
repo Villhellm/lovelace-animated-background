@@ -65,47 +65,54 @@ function device_included(element, index, array) {
 }
 
 function renderBackgroundHTML(hass) {
-  var current_state = hass.states[animatedConfig.entity].state;
-  if (previous_state != current_state) {
-    console.log(current_state);
+  var stateURL = "";
+  if(animatedConfig.entity){
+    var current_state = hass.states[animatedConfig.entity].state;
+    if (previous_state != current_state) {
+      console.log(current_state);
 
-    var stateURL;
-    if (animatedConfig.state_url[current_state]) {
-      stateURL = animatedConfig.state_url[current_state];
-    }
-    else {
+      if (animatedConfig.state_url[current_state]) {
+        stateURL = animatedConfig.state_url[current_state];
+      }
+      else {
+        stateURL = animatedConfig.default_url;
+      }
+      previous_state = current_state;
+    } 
+  }
+  else{
+    if(animatedConfig.default_url){
       stateURL = animatedConfig.default_url;
     }
-
-    var htmlToRender = `<div id="background-video"><style>
-    .bg-video{
-        min-width: 100vw; 
-        min-height: 100vh;
-        
-    }
-    
-    .bg-wrap{
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        min-width: 100vw; 
-        min-height: 100vh;
-        z-index: -1;
-    }
-    
-  </style>
-  <div class="bg-wrap">
-   <iframe class="bg-video" frameborder="0" src="${stateURL}"/> 
-  </div></div>`;
-    var bg = viewLayout.querySelector('[id="background-video"]');
-    if (bg == null) {
-      viewLayout.insertAdjacentHTML("beforeend", htmlToRender);
-
-    }
-    else {
+  }
+  var htmlToRender = `<div id="background-video"><style>
+  .bg-video{
+      min-width: 100vw; 
+      min-height: 100vh;
+      
+  }
+  
+  .bg-wrap{
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      min-width: 100vw; 
+      min-height: 100vh;
+      z-index: -1;
+  }
+  
+</style>
+<div class="bg-wrap">
+ <iframe class="bg-video" frameborder="0" src="${stateURL}"/> 
+</div></div>`;
+  var bg = viewLayout.querySelector('[id="background-video"]');
+  if (bg == null) {
+    viewLayout.insertAdjacentHTML("beforeend", htmlToRender);
+  }
+  else {
+    if(animatedConfig.entity){
       bg.innerHTML = htmlToRender;
     }
-    previous_state = current_state;
   }
 }
 
