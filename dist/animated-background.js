@@ -75,7 +75,9 @@ function renderBackgroundHTML(hass) {
         stateURL = animatedConfig.state_url[current_state];
       }
       else {
-        stateURL = animatedConfig.default_url;
+        if(animatedConfig.default_url){
+          stateURL = animatedConfig.default_url;
+        }
       }
       previous_state = current_state;
     } 
