@@ -75,7 +75,7 @@ Configuration for Animated Background goes into the root of your Lovelace config
 | ---- | ---- | ------- | -----------
 | default_url | string | **Optional** | If no matching state is found, this is the fallback url
 | entity | string | **Optional** | Entity to check for state changes
-| state_url | map | **Optional** | Map of states and urls
+| state_url | map | **Optional** | Map of states and urls. Required if `entity` is defined
 | included_users | list | **Optional** | List of users that will display animated background. If this option is set any users not included in this list will be excluded.
 | included_devices | list | **Optional** | List of devices that will display animated background. If this option is set any devices not included in this list will be excluded.
 | excluded_users | list | **Optional** | Users to be excluded
