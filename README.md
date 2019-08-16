@@ -9,7 +9,7 @@ A big thanks to [CCH](https://github.com/maykar/compact-custom-header) and [Vide
 Example:
 ![Example](https://raw.githubusercontent.com/Villhellm/README_images/master/Animation.gif)
 
-## Installation
+## Installation Method 1: Manual
 
 ### Step 1
 
@@ -35,6 +35,34 @@ animated_background:
       'mostlycloudy': /local/animated-background/background-animations/mostlycloudy.html
       'clear-night': /local/animated-background/background-animations/night.html
       'fog': /local/animated-background/background-animations/fog.html
+```
+
+## Installation Method 2: HACS
+
+### Step 1
+
+Make sure you have [HACS](https://github.com/custom-components/hacs) installed, and proceed with the instructions for [adding a custom repository](https://custom-components.github.io/hacs/usage/settings/#add-custom-repositories)
+
+### Step 2
+
+Add the custom element in the root of your `ui-lovelace.yaml`, not in a view or card.
+Ex:
+```yaml
+resources:
+  - url: /community_plugin/lovelace-animated-background/animated-background.js
+    type: module
+animated_background:
+  default_url: /community_plugin/lovelace-animated-background/background-animations/sunny.html
+  included_users:
+    - Villhellm
+  entity: "weather.dark_sky"
+  state_url:
+      'sunny': /community_plugin/lovelace-animated-background/background-animations/sunny.html
+      'partlycloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
+      'cloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
+      'mostlycloudy': /community_plugin/lovelace-animated-background/background-animations/mostlycloudy.html
+      'clear-night': /community_plugin/lovelace-animated-background/background-animations/night.html
+      'fog': /community_plugin/lovelace-animated-background/background-animations/fog.html
 ```
 
 # Configuration
