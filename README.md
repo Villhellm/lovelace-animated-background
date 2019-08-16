@@ -36,7 +36,7 @@ animated_background:
       'fog': /local/animated-background/background-animations/fog.html
 ```
 
-#Configuration
+# Configuration
 
 Configuration for Animated Background goes into the root of your Lovelace config.
 
