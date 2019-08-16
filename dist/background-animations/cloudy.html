@@ -1,38 +1,55 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Cloudy</title>
-  
-    <style type="text/css">
-      body{
-        min-height:100vh; 
-        min-width:100vw; 
-        max-height:100%; 
-        max-width:100%; 
-        overflow:hidden;
-        margin:0;
-        position:relative;
-      }
-      
-      video{
-        min-width: 100%; 
-        min-height: 100%; 
-        width: auto;
-        height: auto;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%,-50%);
-      }
-    </style>
-  
-  </head>
-  <body >
-    <video autoplay="" loop="" preload="" playsinline="" muted="" poster="">
-      <source src="https://cdn.flixel.com/flixel/cwd3vziszu756mck7ep6.small_hevc.mp4" type="video/mp4">
-        <source src="https://cdn.flixel.com/flixel/cwd3vziszu756mck7ep6.hd.mp4" type="video/mp4">
-        <source src="https://cdn.flixel.com/flixel/cwd3vziszu756mck7ep6.tablet.mp4" type="video/mp4">
-        <source src="https://cdn.flixel.com/flixel/cwd3vziszu756mck7ep6.phone.mp4" type="video/mp4">
-    </video>
-  </body>
+
+<head>
+  <title>Cloudy</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <style type="text/css">
+    body {
+      min-height: 100vh;
+      min-width: 100vw;
+      max-height: 100%;
+      max-width: 100%;
+      overflow: hidden;
+      margin: 0;
+      position: relative;
+    }
+
+    video {
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+
+</head>
+
+<body>
+  <video id="cinemagraph" autoplay="" loop="" preload="" playsinline="" muted="" poster="">
+    <source src="" type="video/mp4">
+  </video>
+  <script>
+    function randomIntFromInterval(min, max) { // min and max included 
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+    var cinemagraphs = [
+      "https://cdn.flixel.com/flixel/13e0s6coh6ayapvdyqnv.hd.mp4",
+      "https://cdn.flixel.com/flixel/aorl3skmssy7udwopk22.hd.mp4",
+      "https://cdn.flixel.com/flixel/qed6wvf2igukiioykg3r.hd.mp4",
+      "https://cdn.flixel.com/flixel/3rd72eezaj6d23ahlo7y.hd.mp4",
+      "https://cdn.flixel.com/flixel/9m11gd43m6qn3y93ntzp.hd.mp4",
+      "https://cdn.flixel.com/flixel/hrkw2m8eofib9sk7t1v2.hd.mp4",
+      "https://cdn.flixel.com/flixel/thin_brige_over_water_overcast.mp4"
+    ];
+    document.getElementById("cinemagraph").setAttribute("src", cinemagraphs[randomIntFromInterval(0, cinemagraphs.length - 1)]); 
+  </script>
+</body>
+
 </html>
