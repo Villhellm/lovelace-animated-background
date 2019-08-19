@@ -10,7 +10,7 @@ root = root && root.querySelector("hui-root");
 const lovelace = root.lovelace;
 root = root.shadowRoot;
 
-
+const route = root.querySelector("app-route");
 const header = root.querySelector("app-header");
 let animatedConfig = lovelace.config.animated_background;
 const viewLayout = root.querySelector("ha-app-layout");
@@ -87,32 +87,35 @@ function renderBackgroundHTML(hass) {
       stateURL = animatedConfig.default_url;
     }
   }
-  var htmlToRender = `<div id="background-video"><style>
-  .bg-video{
-      min-width: 100vw; 
-      min-height: 100vh;
-      
-  }
-  
-  .bg-wrap{
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      min-width: 100vw; 
-      min-height: 100vh;
-      z-index: -1;
-  }
-  
-</style>
-<div class="bg-wrap">
- <iframe class="bg-video" frameborder="0" src="${stateURL}"/> 
-</div></div>`;
+  var htmlToRender;
   if (stateURL != "") {
-    var bg = viewLayout.querySelector('[id="background-video"]');
+    var bg = document.querySelector('[id="background-video"]');
     if (bg == null) {
-      viewLayout.insertAdjacentHTML("beforeend", htmlToRender);
+      htmlToRender=`<style>
+      .bg-video{
+          min-width: 100vw; 
+          min-height: 100vh;
+          
+      }
+      
+      .bg-wrap{
+          position: fixed;
+          right: 0;
+          top: 0;
+          min-width: 100vw; 
+          min-height: 100vh;
+          z-index: -10;
+      }
+      
+    </style>
+    <div id="background-video" class="bg-wrap">
+     <iframe class="bg-video" frameborder="0" src="${stateURL}"/> 
+    </div>`;
+      viewLayout.style.background = "url()"; 
+      route.insertAdjacentHTML("beforeend", htmlToRender);
     }
     else {
+      htmlToRender = `<iframe class="bg-video" frameborder="0" src="${stateURL}"/>`;
       if (animatedConfig.entity) {
         bg.innerHTML = htmlToRender;
       }
