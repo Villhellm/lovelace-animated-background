@@ -32,7 +32,7 @@ function run() {
 
 function enabled(hass) {
   if (animatedConfig.included_users) {
-    if (animatedConfig.included_users.includes(hass.user.name)) {
+    if (animatedConfig.included_users.map(username => username.toLowerCase()).includes(hass.user.name.toLowerCase())) {
       return true;
     }
     else {
@@ -40,7 +40,7 @@ function enabled(hass) {
     }
   }
   if (animatedConfig.excluded_users) {
-    if (animatedConfig.excluded_users.includes(hass.user.name)) {
+    if (animatedConfig.excluded_users.map(username => username.toLowerCase()).includes(hass.user.name.toLowerCase())) {
       return false;
     }
   }
