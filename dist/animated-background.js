@@ -111,8 +111,8 @@ function renderBackgroundHTML(hass) {
     <div id="background-video" class="bg-wrap">
      <iframe class="bg-video" frameborder="0" src="${stateURL}"/> 
     </div>`;
-      viewLayout.style.background = "url()"; 
-      viewLayout.insertAdjacentHTML("beforeend", htmlToRender);
+      viewLayout.querySelector("div").style.background = "url()"; 
+      viewLayout.insertAdjacentHTML("beforebegin", htmlToRender);
     }
     else {
       htmlToRender = `<iframe class="bg-video" frameborder="0" src="${stateURL}"/>`;
