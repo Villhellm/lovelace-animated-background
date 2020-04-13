@@ -8,12 +8,15 @@ root = root && root.querySelector("ha-panel-lovelace");
 root = root && root.shadowRoot;
 root = root && root.querySelector("hui-root");
 const lovelace = root.lovelace;
-root = root.shadowRoot;
-
-const route = root.querySelector("app-route");
-const header = root.querySelector("app-header");
 let animatedConfig = lovelace.config.animated_background;
+
+let styleBlock = root.shadowRoot.getElementById("view");
+styleBlock = styleBlock.querySelector('hui-view');
+styleBlock.style.background = 'transparent';
+
+root = root.shadowRoot;
 const viewLayout = root.querySelector("ha-app-layout");
+viewLayout.style.background = 'transparent';
 
 let previous_state;
 function run() {
@@ -91,7 +94,7 @@ function renderBackgroundHTML(hass) {
   if (stateURL != "") {
     var bg = document.querySelector('[id="background-video"]');
     if (bg == null) {
-      htmlToRender=`<style>
+      htmlToRender = `<style>
       .bg-video{
           min-width: 100vw; 
           min-height: 100vh;
@@ -111,7 +114,6 @@ function renderBackgroundHTML(hass) {
     <div id="background-video" class="bg-wrap">
      <iframe class="bg-video" frameborder="0" src="${stateURL}"/> 
     </div>`;
-      viewLayout.querySelector("div").style.background = "url()"; 
       viewLayout.insertAdjacentHTML("beforebegin", htmlToRender);
     }
     else {
