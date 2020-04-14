@@ -29,12 +29,12 @@ animated_background:
     - Villhellm
   entity: "weather.dark_sky"
   state_url:
-      'sunny': /local/animated-background/background-animations/sunny.html
-      'partlycloudy': /local/animated-background/background-animations/cloudy.html
-      'cloudy': /local/animated-background/background-animations/cloudy.html
-      'mostlycloudy': /local/animated-background/background-animations/mostlycloudy.html
-      'clear-night': /local/animated-background/background-animations/night.html
-      'fog': /local/animated-background/background-animations/fog.html
+    'sunny': /local/animated-background/background-animations/sunny.html
+    'partlycloudy': /local/animated-background/background-animations/cloudy.html
+    'cloudy': /local/animated-background/background-animations/cloudy.html
+    'mostlycloudy': /local/animated-background/background-animations/mostlycloudy.html
+    'clear-night': /local/animated-background/background-animations/night.html
+    'fog': /local/animated-background/background-animations/fog.html
 ```
 
 ## Installation Method 2: HACS
@@ -57,12 +57,12 @@ animated_background:
     - Villhellm
   entity: "weather.dark_sky"
   state_url:
-      'sunny': /community_plugin/lovelace-animated-background/background-animations/sunny.html
-      'partlycloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
-      'cloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
-      'mostlycloudy': /community_plugin/lovelace-animated-background/background-animations/mostlycloudy.html
-      'clear-night': /community_plugin/lovelace-animated-background/background-animations/night.html
-      'fog': /community_plugin/lovelace-animated-background/background-animations/fog.html
+    'sunny': /community_plugin/lovelace-animated-background/background-animations/sunny.html
+    'partlycloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
+    'cloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
+    'mostlycloudy': /community_plugin/lovelace-animated-background/background-animations/mostlycloudy.html
+    'clear-night': /community_plugin/lovelace-animated-background/background-animations/night.html
+    'fog': /community_plugin/lovelace-animated-background/background-animations/fog.html
 ```
 
 # Configuration
