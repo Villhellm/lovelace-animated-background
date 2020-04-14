@@ -63,17 +63,31 @@ animated_background:
     'mostlycloudy': /community_plugin/lovelace-animated-background/background-animations/mostlycloudy.html
     'clear-night': /community_plugin/lovelace-animated-background/background-animations/night.html
     'fog': /community_plugin/lovelace-animated-background/background-animations/fog.html
+  views:
+    - path: default
+      config:
+        default_url: /community_plugin/lovelace-animated-background/background-animations/sunny.html
+        entity: "weather.home"
+        state_url:
+          'sunny': /community_plugin/lovelace-animated-background/background-animations/sunny.html
+          'partlycloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
+          'cloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
+          'mostlycloudy': /community_plugin/lovelace-animated-background/background-animations/mostlycloudy.html
+          'clear-night': /community_plugin/lovelace-animated-background/background-animations/night.html
+          'fog': /community_plugin/lovelace-animated-background/background-animations/fog.html
+      
 ```
 
 # Configuration
 
 Configuration for Animated Background goes into the root of your Lovelace config.
 
-## Options
+## Configuration Options
 
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
 | default_url | string | **Optional** | If no matching state is found, this is the fallback url
+| views | list | **Optional** | Allows you to set custom configurations per view
 | entity | string | **Optional** | Entity to check for state changes
 | state_url | map | **Optional** | Map of states and urls. Required if `entity` is defined
 | included_users | list | **Optional** | List of users that will display animated background. If this option is set any users not included in this list will be excluded.
@@ -82,5 +96,12 @@ Configuration for Animated Background goes into the root of your Lovelace config
 | excluded_devices | list | **Optional** | Devices to be excluded
 
 While all entries are optional, it is recommended to at least set `default_url` or `entity` with `state_url`. Without one of those set you would never know this plugin was installed. 
+
+## View Configuration
+
+| Name | Type | Requirement | Description
+| ---- | ---- | ------- | -----------
+| path | string | **Required** | The path to the Lovelace view you want to configure. Whatever comes after `/lovelace/` in your view's url
+| config | config | **Required** | Same options as the above configuration
 
 [Troubleshooting](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins)
