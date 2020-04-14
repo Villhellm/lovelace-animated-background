@@ -62,20 +62,7 @@ animated_background:
     'cloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
     'mostlycloudy': /community_plugin/lovelace-animated-background/background-animations/mostlycloudy.html
     'clear-night': /community_plugin/lovelace-animated-background/background-animations/night.html
-    'fog': /community_plugin/lovelace-animated-background/background-animations/fog.html
-  views:
-    - path: default
-      config:
-        default_url: /community_plugin/lovelace-animated-background/background-animations/sunny.html
-        entity: "weather.home"
-        state_url:
-          'sunny': /community_plugin/lovelace-animated-background/background-animations/sunny.html
-          'partlycloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
-          'cloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
-          'mostlycloudy': /community_plugin/lovelace-animated-background/background-animations/mostlycloudy.html
-          'clear-night': /community_plugin/lovelace-animated-background/background-animations/night.html
-          'fog': /community_plugin/lovelace-animated-background/background-animations/fog.html
-      
+    'fog': /community_plugin/lovelace-animated-background/background-animations/fog.html      
 ```
 
 # Configuration
@@ -102,6 +89,33 @@ While all entries are optional, it is recommended to at least set `default_url` 
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
 | path | string | **Required** | The path to the Lovelace view you want to configure. Whatever comes after `/lovelace/` in your view's url
-| config | config | **Required** | Same options as the above configuration
+| config | config | **Required** | Same options as the above configuration excluding the device/user options
+
+Ex:
+```yaml
+resources:
+  - url: /community_plugin/lovelace-animated-background/animated-background.js
+    type: module
+animated_background:
+  default_url: /community_plugin/lovelace-animated-background/background-animations/sunny.html
+  included_users:
+    - Villhellm
+  entity: "weather.dark_sky"
+  state_url:
+    'sunny': /community_plugin/lovelace-animated-background/background-animations/sunny.html
+    'partlycloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
+    'cloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
+    'mostlycloudy': /community_plugin/lovelace-animated-background/background-animations/mostlycloudy.html
+    'clear-night': /community_plugin/lovelace-animated-background/background-animations/night.html
+    'fog': /community_plugin/lovelace-animated-background/background-animations/fog.html
+  views:
+    - path: gaming
+      config:
+        default_url: /community_plugin/lovelace-animated-background/background-animations/sunny.html
+        entity: "light.game_room"
+        state_url:
+          'on': /community_plugin/lovelace-animated-background/background-animations/sunny.html
+          'off': /community_plugin/lovelace-animated-background/background-animations/night.html    
+```
 
 [Troubleshooting](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins)
