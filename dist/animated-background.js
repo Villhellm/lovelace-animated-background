@@ -7,15 +7,41 @@ root = (root && root.shadowRoot) || root;
 root = root && root.querySelector("ha-panel-lovelace");
 root = root && root.shadowRoot;
 root = root && root.querySelector("hui-root");
+const hui = root;
 const lovelace = root.lovelace;
 let animatedConfig = lovelace.config.animated_background;
 
-let styleBlock = root.shadowRoot.getElementById("view");
-styleBlock = styleBlock.querySelector('hui-view');
-styleBlock.style.background = 'transparent';
+if (enabled(document.querySelector("home-assistant").hass)) {
+  let styleBlock = root.shadowRoot.getElementById("view");
+  styleBlock = styleBlock.querySelector('hui-view');
+  styleBlock.style.background = 'transparent';
+}
+
 
 const viewLayout = root.shadowRoot.querySelector("ha-app-layout");
 viewLayout.style.background = 'transparent';
+
+//Mutation observer logic to set the background of views to transparent each time a new tab is selected
+var mutationObserver = new MutationObserver(function(mutations) {
+  mutations.forEach(function(mutation) {
+    if(mutation.addedNodes.length > 0)
+    {
+        let viewNode = root.shadowRoot.getElementById("view");
+        viewNode = viewNode.querySelector('hui-view');
+        viewNode.style.background = 'transparent';
+    }
+  });
+});
+
+var huiObserver = new MutationObserver(function(mutations) {
+  mutations.forEach(function(mutation) {
+    if(mutation.addedNodes.length > 0)
+    {
+      //console.log(mutation);
+        renderBackgroundHTML();   
+    }
+  });
+});
 
 let previous_state;
 function run() {
@@ -27,29 +53,31 @@ function run() {
           renderBackgroundHTML(value);
         }
       });
+
+      mutationObserver.observe(viewLayout, {
+        characterData: true,
+        childList: true,
+        subtree: true,
+        characterDataOldValue: true
+      });
+
+      huiObserver.observe(hui, {
+        characterData: true,
+        childList: true,
+        subtree: true,
+        characterDataOldValue: true
+      });
+    }
+    else{
+      console.log("animated background is not enabled");
     }
 
   }
 }
 
-//Mutation observer logic to set the background of views to transparent each time a new tab is selected
-var mutationObserver = new MutationObserver(function(mutations) {
-  mutations.forEach(function(mutation) {
-    if(mutation.addedNodes.length > 0)
-    {
-      let viewNode = root.shadowRoot.getElementById("view");
-      viewNode = viewNode.querySelector('hui-view');
-      viewNode.style.background = 'transparent';
-    }
-  });
-});
-mutationObserver.observe(viewLayout, {
-  characterData: true,
-  childList: true,
-  subtree: true,
-  characterDataOldValue: true
-});
-
+function currentView(){
+  return window.location.pathname.replace("/lovelace/", "");
+}
 
 function enabled(hass) {
   if (animatedConfig.included_users) {
