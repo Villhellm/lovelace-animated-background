@@ -12,44 +12,51 @@ const lovelace = root.lovelace;
 let animatedConfig = lovelace.config.animated_background;
 const viewLayout = root.shadowRoot.querySelector("ha-app-layout");
 viewLayout.style.background = 'transparent';
+let haobj = null;
 
 //Mutation observer logic to set the background of views to transparent each time a new tab is selected
-var mutationObserver = new MutationObserver(function (mutations) {
+var viewObserver = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.addedNodes.length > 0) {
-      let viewNode = root.shadowRoot.getElementById("view");
-      viewNode = viewNode.querySelector('hui-view');
-      viewNode.style.background = 'transparent';
-    }
+      renderBackgroundHTML(haobj);
+      }
   });
 });
 
 var huiObserver = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.addedNodes.length > 0) {
-      renderBackgroundHTML();
+      renderBackgroundHTML(haobj);
     }
   });
 });
 
 let previous_state;
+
+//main function
 function run() {
-  console.log("animated background starting");
+  console.log("Animated Background starting");
   if (animatedConfig) {
+
+    //subscribe to hass object to detect state changes if animated background is enabled
     if (enabled(document.querySelector("home-assistant").hass)) {
       document.querySelector("home-assistant").provideHass({
         set hass(value) {
-          renderBackgroundHTML(value);
+          haobj = value;
         }
       });
 
+      renderBackgroundHTML();
+
+      //render current view background transparent if it exists
       let styleBlock = root.shadowRoot.getElementById("view");
       styleBlock = styleBlock.querySelector('hui-view');
       if (styleBlock != null) {
         styleBlock.style.background = 'transparent';
       }
 
-      mutationObserver.observe(viewLayout, {
+      //start the observers
+      viewObserver.observe(viewLayout, {
         characterData: true,
         childList: true,
         subtree: true,
@@ -64,16 +71,17 @@ function run() {
       });
     }
     else {
-      console.log("animated background is not enabled");
+      console.log("Animated Background is not enabled in Lovelace configuration");
     }
-
   }
 }
 
+//return the currently selected lovelace view
 function currentView() {
   return window.location.pathname.replace("/lovelace/", "");
 }
 
+//logic for checking if Animated Background is enabled in configuration
 function enabled(hass) {
   if (animatedConfig.included_users) {
     if (animatedConfig.included_users.map(username => username.toLowerCase()).includes(hass.user.name.toLowerCase())) {
@@ -104,33 +112,52 @@ function enabled(hass) {
   return true;
 }
 
+//I'm not sure if this is really viable. I'll look into better options in the future
 function device_included(element, index, array) {
   return navigator.userAgent.includes(element);
 }
 
-function renderBackgroundHTML(hass) {
+function renderBackgroundHTML() {
   var stateURL = "";
-  if (animatedConfig.entity) {
-    var current_state = hass.states[animatedConfig.entity].state;
-    if (previous_state != current_state) {
-      console.log(current_state);
+  var selectedConfig = animatedConfig;
+  //check if current view has a separate config
+  if(animatedConfig.views){
+    animatedConfig.views.forEach(view => {
+      if(view.path == currentView()){
+        selectedConfig = view.config;
+      }
+    });
+  }
 
-      if (animatedConfig.state_url[current_state]) {
-        stateURL = animatedConfig.state_url[current_state];
+  //get state of config object 
+  if (selectedConfig.entity) {
+    var current_state = haobj.states[selectedConfig.entity].state;
+    if (previous_state != current_state) {
+      console.log(selectedConfig.entity + " is now " + current_state);
+
+      if (selectedConfig.state_url[current_state]) {
+        stateURL = selectedConfig.state_url[current_state];
       }
       else {
-        if (animatedConfig.default_url) {
-          stateURL = animatedConfig.default_url;
+        if (selectedConfig.default_url) {
+          stateURL = selectedConfig.default_url;
         }
       }
       previous_state = current_state;
     }
   }
   else {
-    if (animatedConfig.default_url) {
-      stateURL = animatedConfig.default_url;
+    if (selectedConfig.default_url) {
+      stateURL = selectedConfig.default_url;
     }
   }
+
+  //render current view background transparent
+  let viewNode = root.shadowRoot.getElementById("view");
+  viewNode = viewNode.querySelector('hui-view');
+  viewNode.style.background = 'transparent';
+
+
   var htmlToRender;
   if (stateURL != "") {
     var bg = document.querySelector('[id="background-video"]');
@@ -141,7 +168,6 @@ function renderBackgroundHTML(hass) {
           min-height: 100vh;
           
       }
-      
       .bg-wrap{
           position: fixed;
           right: 0;
@@ -149,8 +175,7 @@ function renderBackgroundHTML(hass) {
           min-width: 100vw; 
           min-height: 100vh;
           z-index: -10;
-      }
-      
+      }    
     </style>
     <div id="background-video" class="bg-wrap">
      <iframe class="bg-video" frameborder="0" src="${stateURL}"/> 
