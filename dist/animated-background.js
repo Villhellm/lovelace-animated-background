@@ -14,8 +14,7 @@ let styleBlock = root.shadowRoot.getElementById("view");
 styleBlock = styleBlock.querySelector('hui-view');
 styleBlock.style.background = 'transparent';
 
-root = root.shadowRoot;
-const viewLayout = root.querySelector("ha-app-layout");
+const viewLayout = root.shadowRoot.querySelector("ha-app-layout");
 viewLayout.style.background = 'transparent';
 
 let previous_state;
@@ -32,6 +31,25 @@ function run() {
 
   }
 }
+
+//Mutation observer logic to set the background of views to transparent each time a new tab is selected
+var mutationObserver = new MutationObserver(function(mutations) {
+  mutations.forEach(function(mutation) {
+    if(mutation.addedNodes.length > 0)
+    {
+      let viewNode = root.shadowRoot.getElementById("view");
+      viewNode = viewNode.querySelector('hui-view');
+      viewNode.style.background = 'transparent';
+    }
+  });
+});
+mutationObserver.observe(viewLayout, {
+  characterData: true,
+  childList: true,
+  subtree: true,
+  characterDataOldValue: true
+});
+
 
 function enabled(hass) {
   if (animatedConfig.included_users) {
