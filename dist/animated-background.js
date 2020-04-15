@@ -169,7 +169,7 @@ function renderBackgroundHTML() {
 
   var htmlToRender;
   if (stateURL != "") {
-    var bg = document.querySelector('[id="background-video"]');
+    var bg = hui.shadowRoot.getElementById("background-video");
     if (bg == null) {
       htmlToRender = `<style>
       .bg-video{
