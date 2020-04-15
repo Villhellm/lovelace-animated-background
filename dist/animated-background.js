@@ -34,6 +34,7 @@ var huiObserver = new MutationObserver(function (mutations) {
 
 let previous_state;
 let previous_entity;
+
 //main function
 function run() {
   console.log("Animated Background starting");
@@ -130,6 +131,8 @@ function renderBackgroundHTML() {
       }
     });
   }
+  
+  //rerender background if entity has changed (to avoid no background refresh if the new entity happens to have the same state)
   if(previous_entity != selectedConfig.entity){
     previous_state = null;
   }
