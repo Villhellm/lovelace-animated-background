@@ -115,9 +115,9 @@ function enabled(hass) {
   return true;
 }
 
-//I'm not sure if this is really viable. I'll look into better options in the future
+//Current known support: iphone, ipad (if set to mobile site option), windows, macintosh, android
 function device_included(element, index, array) {
-  return navigator.userAgent.includes(element);
+  return navigator.userAgent.toLowerCase().includes(element.toLowerCase());
 }
 
 function renderBackgroundHTML() {
@@ -141,7 +141,7 @@ function renderBackgroundHTML() {
   if (selectedConfig.entity) {
     var current_state = haobj.states[selectedConfig.entity].state;
     if (previous_state != current_state) {
-      console.log("Animated Background entity" + selectedConfig.entity + " is now " + current_state);
+      console.log("Animated Background entity " + selectedConfig.entity + " is now " + current_state);
 
       if (selectedConfig.state_url[current_state]) {
         stateURL = selectedConfig.state_url[current_state];
