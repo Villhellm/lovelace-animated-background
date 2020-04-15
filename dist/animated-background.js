@@ -23,6 +23,7 @@ var viewObserver = new MutationObserver(function (mutations) {
   });
 });
 
+//Mutation observer logic to refresh video on HA refresh
 var huiObserver = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.addedNodes.length > 0) {
@@ -32,7 +33,7 @@ var huiObserver = new MutationObserver(function (mutations) {
 });
 
 let previous_state;
-
+let previous_entity;
 //main function
 function run() {
   console.log("Animated Background starting");
@@ -43,6 +44,7 @@ function run() {
       document.querySelector("home-assistant").provideHass({
         set hass(value) {
           haobj = value;
+          renderBackgroundHTML();
         }
       });
 
@@ -128,12 +130,15 @@ function renderBackgroundHTML() {
       }
     });
   }
+  if(previous_entity != selectedConfig.entity){
+    previous_state = null;
+  }
 
   //get state of config object 
   if (selectedConfig.entity) {
     var current_state = haobj.states[selectedConfig.entity].state;
     if (previous_state != current_state) {
-      console.log(selectedConfig.entity + " is now " + current_state);
+      console.log("Animated Background entity" + selectedConfig.entity + " is now " + current_state);
 
       if (selectedConfig.state_url[current_state]) {
         stateURL = selectedConfig.state_url[current_state];
@@ -144,6 +149,7 @@ function renderBackgroundHTML() {
         }
       }
       previous_state = current_state;
+      previous_entity = selectedConfig.entity;
     }
   }
   else {
