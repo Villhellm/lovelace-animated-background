@@ -48,6 +48,7 @@ Make sure you have [HACS](https://github.com/custom-components/hacs) installed, 
 Add the custom element in the root of your `ui-lovelace.yaml` (or Lovelace raw configuration if not in yaml mode), not in a view or card.
 Ex:
 ```yaml
+#IF YOU ARE USING HA VERSION 0.108+ THEN YOUR RESOURCES WILL BE CONFIGURED ELSEWHERE
 resources:
   - url: /community_plugin/lovelace-animated-background/animated-background.js
     type: module
@@ -62,7 +63,9 @@ animated_background:
     'cloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
     'mostlycloudy': /community_plugin/lovelace-animated-background/background-animations/mostlycloudy.html
     'clear-night': /community_plugin/lovelace-animated-background/background-animations/night.html
-    'fog': /community_plugin/lovelace-animated-background/background-animations/fog.html      
+    'fog': /community_plugin/lovelace-animated-background/background-animations/fog.html
+title: Home
+views: ...
 ```
 
 # Configuration
@@ -93,6 +96,7 @@ While all entries are optional, it is recommended to at least set `default_url` 
 
 Ex:
 ```yaml
+#IF YOU ARE USING HA VERSION 0.108+ THEN YOUR RESOURCES WILL BE CONFIGURED ELSEWHERE
 resources:
   - url: /community_plugin/lovelace-animated-background/animated-background.js
     type: module
@@ -115,7 +119,9 @@ animated_background:
         entity: "light.game_room"
         state_url:
           'on': /community_plugin/lovelace-animated-background/background-animations/sunny.html
-          'off': /community_plugin/lovelace-animated-background/background-animations/night.html    
+          'off': /community_plugin/lovelace-animated-background/background-animations/night.html 
+title: Home
+views: ...
 ```
 
 [Troubleshooting](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins)
