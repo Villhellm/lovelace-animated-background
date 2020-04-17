@@ -4,7 +4,7 @@ This module is for [Lovelace](https://www.home-assistant.io/lovelace) on [Home A
 
 Create animated backgrounds based on the state of one of your entities. Originally designed for changing with the weather, à la [VideoBackground-Card](https://github.com/Perdemot/Lovelace-Cards/tree/master/VideoBackground-Card), you can now choose any entity in home assistant and create an animated background for each of its states.
 
-A big thanks to [CCH](https://github.com/maykar/compact-custom-header) and [VideoBackground-Card](https://github.com/Perdemot/Lovelace-Cards/tree/master/VideoBackground-Card) for the inspiration. All example animation files used in this repo are originally from the VideoBackground-Card repo.
+A big thanks to [Customer Header](https://github.com/maykar/custom-header) and [VideoBackground-Card](https://github.com/Perdemot/Lovelace-Cards/tree/master/VideoBackground-Card) for the inspiration. All example animation files used in this repo are originally from the VideoBackground-Card repo.
 
 Example:
 ![Example](https://raw.githubusercontent.com/Villhellm/README_images/master/Animation.gif)
@@ -20,6 +20,7 @@ Install `animated-background` by copying `animated-background.js` from this repo
 Add the custom element in the root of your `ui-lovelace.yaml` (or Lovelace raw configuration if not in yaml mode), not in a view or card.
 Ex:
 ```yaml
+#IF YOU ARE USING HA VERSION 0.108+ THEN YOUR RESOURCES WILL BE CONFIGURED ELSEWHERE
 resources:
   - url: /local/animated-background.js
     type: module
@@ -35,6 +36,8 @@ animated_background:
     'mostlycloudy': /local/animated-background/background-animations/mostlycloudy.html
     'clear-night': /local/animated-background/background-animations/night.html
     'fog': /local/animated-background/background-animations/fog.html
+title: Home
+views: ...
 ```
 
 ## Installation Method 2: HACS
