@@ -11,7 +11,9 @@ const hui = root;
 const lovelace = root.lovelace;
 let animatedConfig = lovelace.config.animated_background;
 const viewLayout = root.shadowRoot.querySelector("ha-app-layout");
-viewLayout.style.background = 'transparent';
+if(viewLayout != null){
+  viewLayout.style.background = 'transparent';
+}
 let haobj = null;
 
 //Mutation observer logic to set the background of views to transparent each time a new tab is selected
@@ -164,8 +166,9 @@ function renderBackgroundHTML() {
   //render current view background transparent
   let viewNode = root.shadowRoot.getElementById("view");
   viewNode = viewNode.querySelector('hui-view');
-  viewNode.style.background = 'transparent';
-
+  if(viewNode != null){
+    viewNode.style.background = 'transparent';
+  }
 
   var htmlToRender;
   if (stateURL != "") {
