@@ -37,7 +37,7 @@ let previous_entity;
 
 //main function
 function run() {
-  console.log("Animated Background starting");
+  console.log("Animated Background: Starting");
   if (animatedConfig) {
 
     //subscribe to hass object to detect state changes if animated background is enabled
@@ -74,7 +74,7 @@ function run() {
       });
     }
     else {
-      console.log("Animated Background is not enabled in Lovelace configuration");
+      console.log("Animated Background: Not enabled in Lovelace configuration");
     }
   }
 }
@@ -141,7 +141,7 @@ function renderBackgroundHTML() {
   if (selectedConfig.entity) {
     var current_state = haobj.states[selectedConfig.entity].state;
     if (previous_state != current_state) {
-      console.log("Animated Background entity " + selectedConfig.entity + " is now " + current_state);
+      console.log("Animated Background: Configured entity " + selectedConfig.entity + " is now " + current_state);
 
       if (selectedConfig.state_url[current_state]) {
         stateURL = selectedConfig.state_url[current_state];
@@ -171,6 +171,9 @@ function renderBackgroundHTML() {
   if (stateURL != "") {
     var bg = hui.shadowRoot.getElementById("background-video");
     if (bg == null) {
+      if(!selectedConfig.entity){
+        console.log("Animated Background: Applying default background");
+      }
       htmlToRender = `<style>
       .bg-video{
           min-width: 100vw; 
@@ -193,7 +196,7 @@ function renderBackgroundHTML() {
     }
     else {
       htmlToRender = `<iframe class="bg-video" frameborder="0" src="${stateURL}"/>`;
-      if (animatedConfig.entity) {
+      if (selectedConfig.entity) {
         bg.innerHTML = htmlToRender;
       }
     }
