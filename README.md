@@ -17,7 +17,7 @@ Install `animated-background` by copying `animated-background.js` from this repo
 
 ### Step 2
 
-Add the custom element in the root of your `ui-lovelace.yaml`, not in a view or card.
+Add the custom element in the root of your `ui-lovelace.yaml` (or Lovelace raw configuration if not in yaml mode), not in a view or card.
 Ex:
 ```yaml
 resources:
@@ -45,7 +45,7 @@ Make sure you have [HACS](https://github.com/custom-components/hacs) installed, 
 
 ### Step 2
 
-Add the custom element in the root of your `ui-lovelace.yaml`, not in a view or card.
+Add the custom element in the root of your `ui-lovelace.yaml` (or Lovelace raw configuration if not in yaml mode), not in a view or card.
 Ex:
 ```yaml
 resources:
