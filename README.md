@@ -90,6 +90,8 @@ Configuration for Animated Background goes into the root of your Lovelace config
 
 While all entries are optional, it is recommended to at least set `default_url` or `entity` with `state_url`. Without one of those set you would never know this plugin was installed. 
 
+Also note that if you make any changes to the included HTML files, i.e. inserting your own video files, make sure to move the files to a different directory so your changes are not overwritten when you update via HACS.
+
 ## View Configuration
 
 | Name | Type | Requirement | Description
