@@ -88,33 +88,46 @@ function currentView() {
 
 //logic for checking if Animated Background is enabled in configuration
 function enabled(hass) {
-  if (animatedConfig.included_users) {
-    if (animatedConfig.included_users.map(username => username.toLowerCase()).includes(hass.user.name.toLowerCase())) {
-      return true;
-    }
-    else {
-      return false;
+
+  if(animatedConfig.display_user_agent){
+    if(animatedConfig.display_user_agent == true){
+      alert(navigator.userAgent);
     }
   }
-  if (animatedConfig.excluded_users) {
-    if (animatedConfig.excluded_users.map(username => username.toLowerCase()).includes(hass.user.name.toLowerCase())) {
-      return false;
-    }
-  }
-  if (animatedConfig.included_devices) {
-    if (animatedConfig.included_devices.some(device_included)) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
+
+  var temp_enabled = true;
+
   if (animatedConfig.excluded_devices) {
     if (animatedConfig.excluded_devices.some(device_included)) {
-      return false;
+      temp_enabled = false;
     }
   }
-  return true;
+
+  if (animatedConfig.excluded_users) {
+    if (animatedConfig.excluded_users.map(username => username.toLowerCase()).includes(hass.user.name.toLowerCase())) {
+      temp_enabled = false;
+    }
+  }
+
+  if (animatedConfig.included_users) {
+    if (animatedConfig.included_users.map(username => username.toLowerCase()).includes(hass.user.name.toLowerCase())) {
+      temp_enabled = true;
+    }
+    else {
+      temp_enabled = false;
+    }
+  }
+
+  if (animatedConfig.included_devices) {
+    if (animatedConfig.included_devices.some(device_included)) {
+      temp_enabled = true;
+    }
+    else {
+      temp_enabled = false;
+    }
+  }
+
+  return temp_enabled;
 }
 
 //Current known support: iphone, ipad (if set to mobile site option), windows, macintosh, android

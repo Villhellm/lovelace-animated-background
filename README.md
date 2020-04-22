@@ -80,13 +80,14 @@ Configuration for Animated Background goes into the root of your Lovelace config
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
 | default_url | string | **Optional** | If no matching state is found, this is the fallback url
+| display_user_agent | bool | **Optional** | If set to true you will get an alert with your current user agent. This will help determine your device to use in `excluded_devices` or `included_devices`
 | views | list | **Optional** | Allows you to set custom configurations per view
 | entity | string | **Optional** | Entity to check for state changes
 | state_url | map | **Optional** | Map of states and urls. Required if `entity` is defined
 | included_users | list | **Optional** | List of users that will display animated background. If this option is set any users not included in this list will be excluded.
-| included_devices | list | **Optional** | List of devices that will display animated background. If this option is set any devices not included in this list will be excluded.
+| included_devices | list | **Optional** | List of devices that will display animated background. If this option is set any devices not included in this list will be excluded. Ex:  iphone, ipad, windows, macintosh, android
 | excluded_users | list | **Optional** | Users to be excluded
-| excluded_devices | list | **Optional** | Devices to be excluded
+| excluded_devices | list | **Optional** | Devices to be excluded Ex:  iphone, ipad, windows, macintosh, android
 
 While all entries are optional, it is recommended to at least set `default_url` or `entity` with `state_url`. Without one of those set you would never know this plugin was installed. 
 
