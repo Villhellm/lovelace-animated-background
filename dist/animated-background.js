@@ -36,6 +36,7 @@ var huiObserver = new MutationObserver(function (mutations) {
 
 let previous_state;
 let previous_entity;
+let previous_url;
 
 //main function
 function run() {
@@ -209,11 +210,16 @@ function renderBackgroundHTML() {
      <iframe class="bg-video" frameborder="0" src="${stateURL}"/> 
     </div>`;
       viewLayout.insertAdjacentHTML("beforebegin", htmlToRender);
+      previous_url = stateURL;
     }
     else {
       htmlToRender = `<iframe class="bg-video" frameborder="0" src="${stateURL}"/>`;
-      if (selectedConfig.entity) {
+      if (selectedConfig.entity || (previous_url != stateURL)) {
+        if(!selectedConfig.entity){
+          console.log("Animated Background: Applying default background");
+        }
         bg.innerHTML = htmlToRender;
+        previous_url = stateURL;
       }
     }
   }
