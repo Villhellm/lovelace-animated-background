@@ -130,4 +130,24 @@ title: Home
 views: ...
 ```
 
+## Use your own mp4 video file
+If you would like to use your own video file, go into the desired HTML file and find the script block. This block contains a method that will randomly select a video in the `cinemagraphs` array each time the HTML file is loaded. If you only want one video file you can remove all other options and change the url to your desired mp4.
+
+Ex:
+```html
+  <script>
+    function randomIntFromInterval(min, max) {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+    var cinemagraphs = [
+      "https://cdn.flixel.com/flixel/x9dr8caygivq5secll7i.hd.mp4", //remove or change this line
+      "https://cdn.flixel.com/flixel/v26zyfd6yf0r33s46vpe.hd.mp4", //remove or change this line
+      "https://cdn.flixel.com/flixel/ypy8bw9fgw1zv2b4htp2.hd.mp4", //remove or change this line
+      "https://cdn.flixel.com/flixel/rosz2gi676xhkiw1ut6i.hd.mp4" //remove or change this line
+    ];
+    document.getElementById("cinemagraph").setAttribute("src", cinemagraphs[randomIntFromInterval(0, cinemagraphs.length - 1)]); 
+  </script>
+ ```
+
+
 [Troubleshooting](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins)
