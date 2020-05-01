@@ -54,13 +54,6 @@ function run() {
 
       renderBackgroundHTML();
 
-      //render current view background transparent if it exists
-      let styleBlock = root.shadowRoot.getElementById("view");
-      styleBlock = styleBlock.querySelector('hui-view');
-      if (styleBlock != null) {
-        styleBlock.style.background = 'transparent';
-      }
-
       //start the observers
       viewObserver.observe(viewLayout, {
         characterData: true,
@@ -177,15 +170,16 @@ function renderBackgroundHTML() {
     }
   }
 
-  //render current view background transparent
-  let viewNode = root.shadowRoot.getElementById("view");
-  viewNode = viewNode.querySelector('hui-view');
-  if(viewNode != null){
-    viewNode.style.background = 'transparent';
-  }
-
   var htmlToRender;
   if (stateURL != "") {
+
+    //render current view background transparent
+    let viewNode = root.shadowRoot.getElementById("view");
+    viewNode = viewNode.querySelector('hui-view');
+    if(viewNode != null){
+      viewNode.style.background = 'transparent';
+    }
+
     var bg = hui.shadowRoot.getElementById("background-video");
     if (bg == null) {
       if(!selectedConfig.entity){
