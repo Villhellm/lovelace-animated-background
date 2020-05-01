@@ -1,27 +1,39 @@
-let root = document.querySelector("home-assistant");
-root = root && root.shadowRoot;
-root = root && root.querySelector("home-assistant-main");
-root = root && root.shadowRoot;
-root = root && root.querySelector("app-drawer-layout partial-panel-resolver");
-root = (root && root.shadowRoot) || root;
-root = root && root.querySelector("ha-panel-lovelace");
-root = root && root.shadowRoot;
-root = root && root.querySelector("hui-root");
-const hui = root;
-const lovelace = root.lovelace;
-let animatedConfig = lovelace.config.animated_background;
-const viewLayout = root.shadowRoot.querySelector("ha-app-layout");
-if(viewLayout != null){
-  viewLayout.style.background = 'transparent';
+var root;
+var panel_resolver;
+var hui;
+var lovelace;
+var animatedConfig;
+var viewLayout;
+var haobj;
+
+function get_vars() {
+  root = document.querySelector("home-assistant");
+  root = root && root.shadowRoot;
+  root = root && root.querySelector("home-assistant-main");
+  root = root && root.shadowRoot;
+  root = root && root.querySelector("app-drawer-layout partial-panel-resolver");
+  panel_resolver = root;
+  root = (root && root.shadowRoot) || root;
+  root = root && root.querySelector("ha-panel-lovelace");
+  root = root && root.shadowRoot;
+  root = root && root.querySelector("hui-root");
+  hui = root;
+  lovelace = root.lovelace;
+  animatedConfig = lovelace.config.animated_background;
+  viewLayout = root.shadowRoot.querySelector("ha-app-layout");
+  if (viewLayout != null) {
+    viewLayout.style.background = 'transparent';
+  }
+  haobj = null;
 }
-let haobj = null;
+
 
 //Mutation observer logic to set the background of views to transparent each time a new tab is selected
 var viewObserver = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.addedNodes.length > 0) {
       renderBackgroundHTML(haobj);
-      }
+    }
   });
 });
 
@@ -34,12 +46,31 @@ var huiObserver = new MutationObserver(function (mutations) {
   });
 });
 
+var panelObserver = new MutationObserver(function (mutations) {
+  mutations.forEach(function (mutation) {
+    if (mutation.addedNodes.length > 0) {
+      if (mutation.addedNodes[0].nodeName.toLowerCase() == "ha-panel-lovelace") {
+        var wait = 0;
+        var wait_interval = setInterval(() => {
+          get_vars()
+          if (hui != null) {
+            run();
+            clearInterval(wait_interval);
+          }
+        }, 1000 / 60);
+      }
+
+    }
+  });
+});
+
 let previous_state;
 let previous_entity;
 let previous_url;
 
 //main function
 function run() {
+  get_vars();
   console.log("Animated Background: Starting");
   if (animatedConfig) {
 
@@ -68,6 +99,15 @@ function run() {
         subtree: true,
         characterDataOldValue: true
       });
+
+      panelObserver.observe(panel_resolver, {
+        characterData: true,
+        childList: true,
+        subtree: true,
+        characterDataOldValue: true
+      });
+
+
     }
     else {
       console.log("Animated Background: Not enabled in Lovelace configuration");
@@ -77,14 +117,14 @@ function run() {
 
 //return the currently selected lovelace view
 function currentView() {
-  return window.location.pathname.replace("/lovelace/", "");
+  return window.location.pathname.split('/')[2];
 }
 
 //logic for checking if Animated Background is enabled in configuration
 function enabled(hass) {
 
-  if(animatedConfig.display_user_agent){
-    if(animatedConfig.display_user_agent == true){
+  if (animatedConfig.display_user_agent) {
+    if (animatedConfig.display_user_agent == true) {
       alert(navigator.userAgent);
     }
   }
@@ -133,16 +173,16 @@ function renderBackgroundHTML() {
   var stateURL = "";
   var selectedConfig = animatedConfig;
   //check if current view has a separate config
-  if(animatedConfig.views){
+  if (animatedConfig.views) {
     animatedConfig.views.forEach(view => {
-      if(view.path == currentView()){
+      if (view.path == currentView()) {
         selectedConfig = view.config;
       }
     });
   }
-  
+
   //rerender background if entity has changed (to avoid no background refresh if the new entity happens to have the same state)
-  if(previous_entity != selectedConfig.entity){
+  if (previous_entity != selectedConfig.entity) {
     previous_state = null;
   }
 
@@ -176,13 +216,13 @@ function renderBackgroundHTML() {
     //render current view background transparent
     let viewNode = root.shadowRoot.getElementById("view");
     viewNode = viewNode.querySelector('hui-view');
-    if(viewNode != null){
+    if (viewNode != null) {
       viewNode.style.background = 'transparent';
     }
 
     var bg = hui.shadowRoot.getElementById("background-video");
     if (bg == null) {
-      if(!selectedConfig.entity){
+      if (!selectedConfig.entity) {
         console.log("Animated Background: Applying default background");
       }
       htmlToRender = `<style>
@@ -209,7 +249,7 @@ function renderBackgroundHTML() {
     else {
       htmlToRender = `<iframe class="bg-video" frameborder="0" src="${stateURL}"/>`;
       if (selectedConfig.entity || (previous_url != stateURL)) {
-        if(!selectedConfig.entity){
+        if (!selectedConfig.entity) {
           console.log("Animated Background: Applying default background");
         }
         bg.innerHTML = htmlToRender;
