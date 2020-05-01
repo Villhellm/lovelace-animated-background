@@ -8,6 +8,7 @@ assignees: ''
 ---
 
 **Your Animated Background configuration**
+
 ```
 your_config
 ```
@@ -17,6 +18,9 @@ your_config
 
 **Describe the bug**
 A clear and concise description of what the bug is.
+
+**Browser console log**
+Post anything related to animated-background.js
 
 **To Reproduce**
 Steps to reproduce the behavior:
