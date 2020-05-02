@@ -28,6 +28,7 @@ animated_background:
   default_url: /local/animated-background/background-animations/sunny.html
   included_users:
     - Villhellm
+  # Dark Sky is just an example, you do not need Dark Sky for this to work
   entity: "weather.dark_sky"
   state_url:
     'sunny': /local/animated-background/background-animations/sunny.html
@@ -53,20 +54,21 @@ Ex:
 ```yaml
 #IF YOU ARE USING HA VERSION 0.108+ THEN YOUR RESOURCES WILL BE CONFIGURED ELSEWHERE
 resources:
-  - url: /community_plugin/lovelace-animated-background/animated-background.js
+  - url: /hacsfiles/lovelace-animated-background/animated-background.js
     type: module
 animated_background:
-  default_url: /community_plugin/lovelace-animated-background/background-animations/sunny.html
+  default_url: /hacsfiles/lovelace-animated-background/background-animations/sunny.html
   included_users:
     - Villhellm
+  # Dark Sky is just an example, you do not need Dark Sky for this to work
   entity: "weather.dark_sky"
   state_url:
-    'sunny': /community_plugin/lovelace-animated-background/background-animations/sunny.html
-    'partlycloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
-    'cloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
-    'mostlycloudy': /community_plugin/lovelace-animated-background/background-animations/mostlycloudy.html
-    'clear-night': /community_plugin/lovelace-animated-background/background-animations/night.html
-    'fog': /community_plugin/lovelace-animated-background/background-animations/fog.html
+    'sunny': /hacsfiles/lovelace-animated-background/background-animations/sunny.html
+    'partlycloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
+    'cloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
+    'mostlycloudy': /hacsfiles/lovelace-animated-background/background-animations/mostlycloudy.html
+    'clear-night': /hacsfiles/lovelace-animated-background/background-animations/night.html
+    'fog': /hacsfiles/lovelace-animated-background/background-animations/fog.html
 title: Home
 views: ...
 ```
@@ -97,35 +99,36 @@ Also note that if you make any changes to the included HTML files, i.e. insertin
 
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
-| path | string | **Required** | The path to the Lovelace view you want to configure. Whatever comes after `/lovelace/` in your view's url
+| path | string | **Required** | The path to the Lovelace view you want to configure. Whatever comes after `/lovelace/` in your view's url. Even if you are using a different dashboard than `/lovelace/`, you still just use the last part of the url.
 | config | config | **Required** | Same options as the above configuration excluding the device/user options
 
 Ex:
 ```yaml
 #IF YOU ARE USING HA VERSION 0.108+ THEN YOUR RESOURCES WILL BE CONFIGURED ELSEWHERE
 resources:
-  - url: /community_plugin/lovelace-animated-background/animated-background.js
+  - url: /hacsfiles/lovelace-animated-background/animated-background.js
     type: module
 animated_background:
-  default_url: /community_plugin/lovelace-animated-background/background-animations/sunny.html
+  default_url: /hacsfiles/lovelace-animated-background/background-animations/sunny.html
   included_users:
     - Villhellm
+  # Dark Sky is just an example, you do not need Dark Sky for this to work
   entity: "weather.dark_sky"
   state_url:
-    'sunny': /community_plugin/lovelace-animated-background/background-animations/sunny.html
-    'partlycloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
-    'cloudy': /community_plugin/lovelace-animated-background/background-animations/cloudy.html
-    'mostlycloudy': /community_plugin/lovelace-animated-background/background-animations/mostlycloudy.html
-    'clear-night': /community_plugin/lovelace-animated-background/background-animations/night.html
-    'fog': /community_plugin/lovelace-animated-background/background-animations/fog.html
+    'sunny': /hacsfiles/lovelace-animated-background/background-animations/sunny.html
+    'partlycloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
+    'cloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
+    'mostlycloudy': /hacsfiles/lovelace-animated-background/background-animations/mostlycloudy.html
+    'clear-night': /hacsfiles/lovelace-animated-background/background-animations/night.html
+    'fog': /hacsfiles/lovelace-animated-background/background-animations/fog.html
   views:
     - path: gaming
       config:
-        default_url: /community_plugin/lovelace-animated-background/background-animations/sunny.html
+        default_url: /hacsfiles/lovelace-animated-background/background-animations/sunny.html
         entity: "light.game_room"
         state_url:
-          'on': /community_plugin/lovelace-animated-background/background-animations/sunny.html
-          'off': /community_plugin/lovelace-animated-background/background-animations/night.html 
+          'on': /hacsfiles/lovelace-animated-background/background-animations/sunny.html
+          'off': /hacsfiles/lovelace-animated-background/background-animations/night.html 
 title: Home
 views: ...
 ```
