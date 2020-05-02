@@ -227,13 +227,19 @@ function removeDefaultBackground() {
         viewNode = root.shadowRoot.getElementById("view");
         viewNode = viewNode.querySelector('hui-view');
       }
-
       if (!isNullOrUndefined(viewNode)) {
         if (configured() && enabled(haobj)) {
           viewNode.style.background = 'transparent';
           viewLayout.style.background = 'transparent';
         }
-
+      }
+      else{
+        viewNode = root.shadowRoot.getElementById("view");
+        viewNode = viewNode.querySelector("hui-panel-view");
+        if(configured() && enabled(haobj)){
+          viewNode.style.background = 'transparent';
+          viewLayout.style.background = 'transparent';
+        }
       }
       memeCount++;
       if (memeCount > 20) {
