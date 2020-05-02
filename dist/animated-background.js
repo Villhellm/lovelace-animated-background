@@ -5,6 +5,7 @@ var lovelace;
 var animatedConfig;
 var viewLayout;
 var haobj;
+var view;
 
 function get_vars() {
   root = document.querySelector("home-assistant");
@@ -20,7 +21,8 @@ function get_vars() {
   hui = root;
   lovelace = root.lovelace;
   animatedConfig = lovelace.config.animated_background;
-  viewLayout = root.shadowRoot.querySelector("ha-app-layout");
+  viewLayout = root.shadowRoot.getElementById("layout");
+  view = root.shadowRoot.getElementById("view");
   if (viewLayout != null) {
     viewLayout.style.background = 'transparent';
   }
@@ -32,7 +34,8 @@ function get_vars() {
 var viewObserver = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.addedNodes.length > 0) {
-      renderBackgroundHTML(haobj);
+      removeBackground();
+      renderBackgroundHTML();
     }
   });
 });
@@ -41,7 +44,7 @@ var viewObserver = new MutationObserver(function (mutations) {
 var huiObserver = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.addedNodes.length > 0) {
-      renderBackgroundHTML(haobj);
+      renderBackgroundHTML();
     }
   });
 });
@@ -71,6 +74,7 @@ let previous_url;
 //main function
 function run() {
   get_vars();
+
   console.log("Animated Background: Starting");
   if (animatedConfig) {
 
@@ -83,10 +87,8 @@ function run() {
         }
       });
 
-      renderBackgroundHTML();
-
       //start the observers
-      viewObserver.observe(viewLayout, {
+      viewObserver.observe(view, {
         characterData: true,
         childList: true,
         subtree: true,
@@ -107,6 +109,7 @@ function run() {
         characterDataOldValue: true
       });
 
+      renderBackgroundHTML();
 
     }
     else {
@@ -169,6 +172,28 @@ function device_included(element, index, array) {
   return navigator.userAgent.toLowerCase().includes(element.toLowerCase());
 }
 
+//remove background for 2 seconds because race condition memes.
+var memeRemover = null;
+var memeCount = 0;
+function removeBackground() {
+  if (memeRemover == null) {
+    memeRemover = setInterval(() => {
+      let viewNode = root.shadowRoot.getElementById("view");
+      viewNode = viewNode.querySelector('hui-view');
+      if (viewNode != null) {
+        viewNode.style.background = 'transparent';
+      }
+      memeCount++;
+      if (memeCount > 20) {
+        clearInterval(memeRemover);
+        memeRemover = null;
+        memeCount = 0;
+      }
+    }, 100);
+  }
+
+}
+
 function renderBackgroundHTML() {
   var stateURL = "";
   var selectedConfig = animatedConfig;
@@ -212,14 +237,6 @@ function renderBackgroundHTML() {
 
   var htmlToRender;
   if (stateURL != "") {
-
-    //render current view background transparent
-    let viewNode = root.shadowRoot.getElementById("view");
-    viewNode = viewNode.querySelector('hui-view');
-    if (viewNode != null) {
-      viewNode.style.background = 'transparent';
-    }
-
     var bg = hui.shadowRoot.getElementById("background-video");
     if (bg == null) {
       if (!selectedConfig.entity) {
@@ -245,10 +262,12 @@ function renderBackgroundHTML() {
     </div>`;
       viewLayout.insertAdjacentHTML("beforebegin", htmlToRender);
       previous_url = stateURL;
+      removeBackground();
     }
     else {
       htmlToRender = `<iframe class="bg-video" frameborder="0" src="${stateURL}"/>`;
       if (selectedConfig.entity || (previous_url != stateURL)) {
+        removeBackground();
         if (!selectedConfig.entity) {
           console.log("Animated Background: Applying default background");
         }
