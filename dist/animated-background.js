@@ -1,3 +1,4 @@
+//globals
 var root;
 var panel_resolver;
 var hui;
@@ -7,6 +8,7 @@ var viewLayout;
 var haobj;
 var view;
 
+//reset all DOM variables
 function get_vars() {
   root = document.querySelector("home-assistant");
   root = root && root.shadowRoot;
@@ -19,30 +21,30 @@ function get_vars() {
   root = root && root.shadowRoot;
   root = root && root.querySelector("hui-root");
   hui = root;
-  lovelace = root.lovelace;
-  animatedConfig = lovelace.config.animated_background;
-  viewLayout = root.shadowRoot.getElementById("layout");
-  view = root.shadowRoot.getElementById("view");
-  if (viewLayout != null) {
-    viewLayout.style.background = 'transparent';
+  if (!isNullOrUndefined(root)) {
+    lovelace = root.lovelace;
+    if (!isNullOrUndefined(lovelace)) {
+      animatedConfig = lovelace.config.animated_background;
+    }
+    viewLayout = root.shadowRoot.getElementById("layout");
+    view = root.shadowRoot.getElementById("view");
   }
   haobj = null;
 }
 
-var current_view_enabled = false;
-//Mutation observer logic to set the background of views to transparent each time a new tab is selected
+//Mutation observer to set the background of views to transparent each time a new tab is selected
 var viewObserver = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.addedNodes.length > 0) {
-      renderBackgroundHTML();
-      if(current_view_enabled){
-        removeBackground();
+      if (currentViewEnabled()) {
+        renderBackgroundHTML();
+        removeDefaultBackground();
       }
     }
   });
 });
 
-//Mutation observer logic to refresh video on HA refresh
+//Mutation observer to refresh video on HA refresh
 var huiObserver = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.addedNodes.length > 0) {
@@ -51,6 +53,7 @@ var huiObserver = new MutationObserver(function (mutations) {
   });
 });
 
+//Mutation observer to reload on dashboard change
 var panelObserver = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.addedNodes.length > 0) {
@@ -58,7 +61,7 @@ var panelObserver = new MutationObserver(function (mutations) {
         var wait = 0;
         var wait_interval = setInterval(() => {
           get_vars()
-          if (hui != null) {
+          if (!isNullOrUndefined(hui)) {
             run();
             clearInterval(wait_interval);
           }
@@ -69,6 +72,7 @@ var panelObserver = new MutationObserver(function (mutations) {
   });
 });
 
+//state tracking variables
 let previous_state;
 let previous_entity;
 let previous_url;
@@ -78,8 +82,32 @@ function run() {
   get_vars();
 
   console.log("Animated Background: Starting");
-  if (animatedConfig) {
 
+  viewObserver.disconnect();
+  viewObserver.observe(view, {
+    characterData: true,
+    childList: true,
+    subtree: true,
+    characterDataOldValue: true
+  });
+
+  huiObserver.disconnect();
+  huiObserver.observe(hui, {
+    characterData: true,
+    childList: true,
+    subtree: true,
+    characterDataOldValue: true
+  });
+
+  panelObserver.disconnect();
+  panelObserver.observe(panel_resolver, {
+    characterData: true,
+    childList: true,
+    subtree: true,
+    characterDataOldValue: true
+  });
+
+  if (!isNullOrUndefined(animatedConfig)) {
     //subscribe to hass object to detect state changes if animated background is enabled
     if (enabled(document.querySelector("home-assistant").hass)) {
       document.querySelector("home-assistant").provideHass({
@@ -88,35 +116,14 @@ function run() {
           renderBackgroundHTML();
         }
       });
-
-      //start the observers
-      viewObserver.observe(view, {
-        characterData: true,
-        childList: true,
-        subtree: true,
-        characterDataOldValue: true
-      });
-
-      huiObserver.observe(hui, {
-        characterData: true,
-        childList: true,
-        subtree: true,
-        characterDataOldValue: true
-      });
-
-      panelObserver.observe(panel_resolver, {
-        characterData: true,
-        childList: true,
-        subtree: true,
-        characterDataOldValue: true
-      });
-
       renderBackgroundHTML();
-
     }
     else {
-      console.log("Animated Background: Not enabled in Lovelace configuration");
+      console.log("Animated Background: Current environment is not enabled in Lovelace configuration");
     }
+  }
+  else {
+    console.log("Animated Background: No configuration found");
   }
 }
 
@@ -125,10 +132,44 @@ function currentView() {
   return window.location.pathname.split('/')[2];
 }
 
+//bool returns whether current configuration exists in animated_config (different from enabled in that no haobj is required and is more flexible)
+function configured() {
+  var temp_configured = false;
+  if (!isNullOrUndefined(animatedConfig)) {
+    if (!isNullOrUndefined(animatedConfig.default_url) || !isNullOrUndefined(animatedConfig.entity)) {
+      temp_configured = true;
+    }
+
+    if (!isNullOrUndefined(animatedConfig.views)) {
+      animatedConfig.views.forEach(view => {
+        if (view.path == currentView()) {
+          temp_configured = true;
+        }
+      });
+    }
+  }
+  return temp_configured;
+}
+
+//generic null/undefined helper function
+function isNullOrUndefined(obj) {
+  if (obj == null) {
+    return true;
+  }
+  if (obj == undefined) {
+    return true;
+  }
+  return false;
+}
+
 //logic for checking if Animated Background is enabled in configuration
 function enabled(hass) {
 
-  if (animatedConfig.display_user_agent) {
+  if (isNullOrUndefined(animatedConfig)) {
+    return false;
+  }
+
+  if (!isNullOrUndefined(animatedConfig.display_user_agent)) {
     if (animatedConfig.display_user_agent == true) {
       alert(navigator.userAgent);
     }
@@ -136,19 +177,19 @@ function enabled(hass) {
 
   var temp_enabled = true;
 
-  if (animatedConfig.excluded_devices) {
+  if (!isNullOrUndefined(animatedConfig.excluded_devices)) {
     if (animatedConfig.excluded_devices.some(device_included)) {
       temp_enabled = false;
     }
   }
 
-  if (animatedConfig.excluded_users) {
+  if (!isNullOrUndefined(animatedConfig.excluded_users)) {
     if (animatedConfig.excluded_users.map(username => username.toLowerCase()).includes(hass.user.name.toLowerCase())) {
       temp_enabled = false;
     }
   }
 
-  if (animatedConfig.included_users) {
+  if (!isNullOrUndefined(animatedConfig.included_users)) {
     if (animatedConfig.included_users.map(username => username.toLowerCase()).includes(hass.user.name.toLowerCase())) {
       temp_enabled = true;
     }
@@ -157,7 +198,7 @@ function enabled(hass) {
     }
   }
 
-  if (animatedConfig.included_devices) {
+  if (!isNullOrUndefined(animatedConfig.included_devices)) {
     if (animatedConfig.included_devices.some(device_included)) {
       temp_enabled = true;
     }
@@ -174,16 +215,25 @@ function device_included(element, index, array) {
   return navigator.userAgent.toLowerCase().includes(element.toLowerCase());
 }
 
-//remove background for 2 seconds because race condition memes.
+//remove background every 100 milliseconds for 2 seconds because race condition memes.
 var memeRemover = null;
 var memeCount = 0;
-function removeBackground() {
-  if (memeRemover == null) {
+function removeDefaultBackground() {
+  if (isNullOrUndefined(memeRemover)) {
     memeRemover = setInterval(() => {
-      let viewNode = root.shadowRoot.getElementById("view");
-      viewNode = viewNode.querySelector('hui-view');
-      if (viewNode != null) {
-        viewNode.style.background = 'transparent';
+      get_vars();
+      var viewNode = null;
+      if (!isNullOrUndefined(root)) {
+        viewNode = root.shadowRoot.getElementById("view");
+        viewNode = viewNode.querySelector('hui-view');
+      }
+
+      if (!isNullOrUndefined(viewNode)) {
+        if (configured() && enabled(haobj)) {
+          viewNode.style.background = 'transparent';
+          viewLayout.style.background = 'transparent';
+        }
+
       }
       memeCount++;
       if (memeCount > 20) {
@@ -196,18 +246,43 @@ function removeBackground() {
 
 }
 
-function renderBackgroundHTML() {
-  current_view_enabled = false;
-  var stateURL = "";
-  var selectedConfig = animatedConfig;
-  //check if current view has a separate config
-  if (animatedConfig.views) {
-    animatedConfig.views.forEach(view => {
-      if (view.path == currentView()) {
-        selectedConfig = view.config;
-      }
-    });
+//return the current view configuration or null if none is found
+function currentConfig() {
+  var current_view = currentView();
+  var return_config = null;
+  if (!isNullOrUndefined(animatedConfig)) {
+    if (!isNullOrUndefined(animatedConfig.entity) || !isNullOrUndefined(animatedConfig.default_url)) {
+      return_config = animatedConfig;
+    }
+    if (!isNullOrUndefined(animatedConfig.views)) {
+      animatedConfig.views.forEach(view => {
+        if (view.path == current_view) {
+          if (!isNullOrUndefined(view.config)) {
+            return_config = view.config;
+
+          }
+          else {
+            console.log("Animated Background: Error, defined view has no config");
+          }
+        }
+      });
+    }
   }
+  return return_config;
+}
+
+//bool whether currentConfig returns a non-null value
+function currentViewEnabled() {
+  return !isNullOrUndefined(currentConfig());
+}
+
+//main render function
+function renderBackgroundHTML() {
+  if (!enabled(haobj)) {
+    return;
+  }
+  var stateURL = "";
+  var selectedConfig = currentConfig();
 
   //rerender background if entity has changed (to avoid no background refresh if the new entity happens to have the same state)
   if (previous_entity != selectedConfig.entity) {
@@ -216,11 +291,9 @@ function renderBackgroundHTML() {
 
   //get state of config object 
   if (selectedConfig.entity) {
-    current_view_enabled = true;
     var current_state = haobj.states[selectedConfig.entity].state;
     if (previous_state != current_state) {
       console.log("Animated Background: Configured entity " + selectedConfig.entity + " is now " + current_state);
-
       if (selectedConfig.state_url[current_state]) {
         stateURL = selectedConfig.state_url[current_state];
       }
@@ -241,9 +314,8 @@ function renderBackgroundHTML() {
 
   var htmlToRender;
   if (stateURL != "") {
-    current_view_enabled = true;
     var bg = hui.shadowRoot.getElementById("background-video");
-    if (bg == null) {
+    if (isNullOrUndefined(bg)) {
       if (!selectedConfig.entity) {
         console.log("Animated Background: Applying default background");
       }
@@ -267,12 +339,12 @@ function renderBackgroundHTML() {
     </div>`;
       viewLayout.insertAdjacentHTML("beforebegin", htmlToRender);
       previous_url = stateURL;
-      removeBackground();
+      removeDefaultBackground();
     }
     else {
       htmlToRender = `<iframe class="bg-video" frameborder="0" src="${stateURL}"/>`;
       if (selectedConfig.entity || (previous_url != stateURL)) {
-        removeBackground();
+        removeDefaultBackground();
         if (!selectedConfig.entity) {
           console.log("Animated Background: Applying default background");
         }
