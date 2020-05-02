@@ -29,13 +29,15 @@ function get_vars() {
   haobj = null;
 }
 
-
+var current_view_enabled = false;
 //Mutation observer logic to set the background of views to transparent each time a new tab is selected
 var viewObserver = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.addedNodes.length > 0) {
-      removeBackground();
       renderBackgroundHTML();
+      if(current_view_enabled){
+        removeBackground();
+      }
     }
   });
 });
@@ -195,6 +197,7 @@ function removeBackground() {
 }
 
 function renderBackgroundHTML() {
+  current_view_enabled = false;
   var stateURL = "";
   var selectedConfig = animatedConfig;
   //check if current view has a separate config
@@ -213,6 +216,7 @@ function renderBackgroundHTML() {
 
   //get state of config object 
   if (selectedConfig.entity) {
+    current_view_enabled = true;
     var current_state = haobj.states[selectedConfig.entity].state;
     if (previous_state != current_state) {
       console.log("Animated Background: Configured entity " + selectedConfig.entity + " is now " + current_state);
@@ -237,6 +241,7 @@ function renderBackgroundHTML() {
 
   var htmlToRender;
   if (stateURL != "") {
+    current_view_enabled = true;
     var bg = hui.shadowRoot.getElementById("background-video");
     if (bg == null) {
       if (!selectedConfig.entity) {
