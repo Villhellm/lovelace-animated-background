@@ -77,22 +77,18 @@ let previous_state;
 let previous_entity;
 let previous_url;
 
-function getHaobj(skip) {
-  document.querySelector("home-assistant").provideHass({
-    set hass(value) {
-      haobj = value;
-      if (skip != true) {
-        renderBackgroundHTML();
-      }
-    }
-  });
-}
-
 //main function
 function run() {
   get_vars();
 
   console.log("Animated Background: Starting");
+
+  document.querySelector("home-assistant").provideHass({
+    set hass(value) {
+      haobj = value;
+        renderBackgroundHTML();
+    }
+  });
 
   viewObserver.disconnect();
   viewObserver.observe(view, {
@@ -244,9 +240,11 @@ function removeDefaultBackground() {
         else {
           viewNode = root.shadowRoot.getElementById("view");
           viewNode = viewNode.querySelector("hui-panel-view");
-          if (configured() && enabled(haobj)) {
-            viewNode.style.background = 'transparent';
-            viewLayout.style.background = 'transparent';
+          if (!isNullOrUndefined(viewNode)) {
+            if (configured() && enabled(haobj)) {
+              viewNode.style.background = 'transparent';
+              viewLayout.style.background = 'transparent';
+            }
           }
         }
       }
@@ -293,7 +291,7 @@ function currentViewEnabled() {
 //main render function
 function renderBackgroundHTML() {
   if (haobj == null) {
-    getHaobj(true);
+    return;
   }
   if (!enabled(haobj)) {
     return;
