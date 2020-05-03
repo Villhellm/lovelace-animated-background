@@ -5,7 +5,7 @@ var hui;
 var lovelace;
 var animatedConfig;
 var viewLayout;
-var haobj;
+var haobj = null;
 var view;
 
 //reset all DOM variables
@@ -29,7 +29,6 @@ function get_vars() {
     viewLayout = root.shadowRoot.getElementById("layout");
     view = root.shadowRoot.getElementById("view");
   }
-  haobj = null;
 }
 
 //Mutation observer to set the background of views to transparent each time a new tab is selected
@@ -86,7 +85,7 @@ function run() {
   document.querySelector("home-assistant").provideHass({
     set hass(value) {
       haobj = value;
-        renderBackgroundHTML();
+      renderBackgroundHTML();
     }
   });
 
@@ -164,8 +163,7 @@ function isNullOrUndefined(obj) {
 
 //logic for checking if Animated Background is enabled in configuration
 function enabled(hass) {
-
-  if (isNullOrUndefined(animatedConfig)) {
+  if (isNullOrUndefined(animatedConfig) || isNullOrUndefined(haobj)) {
     return false;
   }
 
@@ -290,12 +288,10 @@ function currentViewEnabled() {
 
 //main render function
 function renderBackgroundHTML() {
-  if (haobj == null) {
+  if (isNullOrUndefined(haobj) || !enabled(haobj)) {
     return;
   }
-  if (!enabled(haobj)) {
-    return;
-  }
+
   var stateURL = "";
   var selectedConfig = currentConfig();
 
