@@ -77,6 +77,17 @@ let previous_state;
 let previous_entity;
 let previous_url;
 
+function getHaobj(skip) {
+  document.querySelector("home-assistant").provideHass({
+    set hass(value) {
+      haobj = value;
+      if (skip != true) {
+        renderBackgroundHTML();
+      }
+    }
+  });
+}
+
 //main function
 function run() {
   get_vars();
@@ -110,12 +121,6 @@ function run() {
   if (!isNullOrUndefined(animatedConfig)) {
     //subscribe to hass object to detect state changes if animated background is enabled
     if (enabled(document.querySelector("home-assistant").hass)) {
-      document.querySelector("home-assistant").provideHass({
-        set hass(value) {
-          haobj = value;
-          renderBackgroundHTML();
-        }
-      });
       renderBackgroundHTML();
     }
     else {
@@ -140,12 +145,11 @@ function configured() {
       temp_configured = true;
     }
 
-    if (!isNullOrUndefined(animatedConfig.views)) {
-      animatedConfig.views.forEach(view => {
-        if (view.path == currentView()) {
-          temp_configured = true;
-        }
-      });
+    var current = currentConfig();
+    if (!isNullOrUndefined(current.enabled)) {
+      if (current.enabled == false) {
+        temp_configured = false;
+      }
     }
   }
   return temp_configured;
@@ -206,7 +210,12 @@ function enabled(hass) {
       temp_enabled = false;
     }
   }
-
+  var current = currentConfig();
+  if (!isNullOrUndefined(current.enabled)) {
+    if (current.enabled == false) {
+      temp_enabled = false;
+    }
+  }
   return temp_enabled;
 }
 
@@ -226,19 +235,19 @@ function removeDefaultBackground() {
       if (!isNullOrUndefined(root)) {
         viewNode = root.shadowRoot.getElementById("view");
         viewNode = viewNode.querySelector('hui-view');
-      }
-      if (!isNullOrUndefined(viewNode)) {
-        if (configured() && enabled(haobj)) {
-          viewNode.style.background = 'transparent';
-          viewLayout.style.background = 'transparent';
+        if (!isNullOrUndefined(viewNode)) {
+          if (configured() && enabled(haobj)) {
+            viewNode.style.background = 'transparent';
+            viewLayout.style.background = 'transparent';
+          }
         }
-      }
-      else{
-        viewNode = root.shadowRoot.getElementById("view");
-        viewNode = viewNode.querySelector("hui-panel-view");
-        if(configured() && enabled(haobj)){
-          viewNode.style.background = 'transparent';
-          viewLayout.style.background = 'transparent';
+        else {
+          viewNode = root.shadowRoot.getElementById("view");
+          viewNode = viewNode.querySelector("hui-panel-view");
+          if (configured() && enabled(haobj)) {
+            viewNode.style.background = 'transparent';
+            viewLayout.style.background = 'transparent';
+          }
         }
       }
       memeCount++;
@@ -265,7 +274,6 @@ function currentConfig() {
         if (view.path == current_view) {
           if (!isNullOrUndefined(view.config)) {
             return_config = view.config;
-
           }
           else {
             console.log("Animated Background: Error, defined view has no config");
@@ -284,6 +292,9 @@ function currentViewEnabled() {
 
 //main render function
 function renderBackgroundHTML() {
+  if (haobj == null) {
+    getHaobj(true);
+  }
   if (!enabled(haobj)) {
     return;
   }
