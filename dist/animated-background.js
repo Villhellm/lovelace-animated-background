@@ -82,12 +82,15 @@ function run() {
 
   console.log("Animated Background: Starting");
 
-  document.querySelector("home-assistant").provideHass({
-    set hass(value) {
-      haobj = value;
-      renderBackgroundHTML();
-    }
-  });
+  //subscribe to hass object to detect state changes if animated background is enabled
+  if (isNullOrUndefined(haobj)) {
+    document.querySelector("home-assistant").provideHass({
+      set hass(value) {
+        haobj = value;
+        renderBackgroundHTML();
+      }
+    });
+  }
 
   viewObserver.disconnect();
   viewObserver.observe(view, {
@@ -114,8 +117,7 @@ function run() {
   });
 
   if (!isNullOrUndefined(animatedConfig)) {
-    //subscribe to hass object to detect state changes if animated background is enabled
-    if (enabled(document.querySelector("home-assistant").hass)) {
+    if (enabled()) {
       renderBackgroundHTML();
     }
     else {
@@ -162,7 +164,7 @@ function isNullOrUndefined(obj) {
 }
 
 //logic for checking if Animated Background is enabled in configuration
-function enabled(hass) {
+function enabled() {
   if (isNullOrUndefined(animatedConfig) || isNullOrUndefined(haobj)) {
     return false;
   }
@@ -182,13 +184,13 @@ function enabled(hass) {
   }
 
   if (!isNullOrUndefined(animatedConfig.excluded_users)) {
-    if (animatedConfig.excluded_users.map(username => username.toLowerCase()).includes(hass.user.name.toLowerCase())) {
+    if (animatedConfig.excluded_users.map(username => username.toLowerCase()).includes(haobj.user.name.toLowerCase())) {
       temp_enabled = false;
     }
   }
 
   if (!isNullOrUndefined(animatedConfig.included_users)) {
-    if (animatedConfig.included_users.map(username => username.toLowerCase()).includes(hass.user.name.toLowerCase())) {
+    if (animatedConfig.included_users.map(username => username.toLowerCase()).includes(haobj.user.name.toLowerCase())) {
       temp_enabled = true;
     }
     else {
@@ -230,7 +232,7 @@ function removeDefaultBackground() {
         viewNode = root.shadowRoot.getElementById("view");
         viewNode = viewNode.querySelector('hui-view');
         if (!isNullOrUndefined(viewNode)) {
-          if (configured() && enabled(haobj)) {
+          if (configured() && enabled()) {
             viewNode.style.background = 'transparent';
             viewLayout.style.background = 'transparent';
           }
@@ -239,7 +241,7 @@ function removeDefaultBackground() {
           viewNode = root.shadowRoot.getElementById("view");
           viewNode = viewNode.querySelector("hui-panel-view");
           if (!isNullOrUndefined(viewNode)) {
-            if (configured() && enabled(haobj)) {
+            if (configured() && enabled()) {
               viewNode.style.background = 'transparent';
               viewLayout.style.background = 'transparent';
             }
@@ -288,7 +290,7 @@ function currentViewEnabled() {
 
 //main render function
 function renderBackgroundHTML() {
-  if (isNullOrUndefined(haobj) || !enabled(haobj)) {
+  if (!enabled()) {
     return;
   }
 
