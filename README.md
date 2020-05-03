@@ -85,6 +85,7 @@ Configuration for Animated Background goes into the root of your Lovelace config
 | enabled | bool | **Optional** | Set to false to disable Animated Background
 | display_user_agent | bool | **Optional** | If set to true you will get an alert with your current user agent. This will help determine your device to use in `excluded_devices` or `included_devices`
 | views | list | **Optional** | Allows you to set custom configurations per view
+| groups | list | **Optional** | Allows you to set custom configurations that can be referenced in lovelace view configurations
 | entity | string | **Optional** | Entity to check for state changes
 | state_url | map | **Optional** | Map of states and urls. Required if `entity` is defined
 | included_users | list | **Optional** | List of users that will display animated background. If this option is set any users not included in this list will be excluded.
@@ -101,6 +102,13 @@ Also note that if you make any changes to the included HTML files, i.e. insertin
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
 | path | string | **Required** | The path to the Lovelace view you want to configure. Whatever comes after `/lovelace/` in your view's url. Even if you are using a different dashboard than `/lovelace/`, you still just use the last part of the url.
+| config | config | **Required** | Same options as the above configuration excluding the device/user options
+
+## Group Configuration
+
+| Name | Type | Requirement | Description
+| ---- | ---- | ------- | -----------
+| name | string | **Required** | The name you would like to use to define your group.
 | config | config | **Required** | Same options as the above configuration excluding the device/user options
 
 Ex:
@@ -132,6 +140,39 @@ animated_background:
           'off': /hacsfiles/lovelace-animated-background/background-animations/night.html 
 title: Home
 views: ...
+```
+
+## How to use groups
+Groups can be used to easily reuse Animated Background configurations. After defining your `groups:` block with at least one entry, you can add a single line to any of your views to use this configuration. 
+
+Ex:
+```yaml
+animated_background:
+  default_url: /hacsfiles/lovelace-animated-background/background-animations/night.html
+  groups:
+    - name: weather
+      config:
+        entity: "weather.home"
+        state_url:
+            'sunny': /hacsfiles/lovelace-animated-background/background-animations/sunny.html
+            'partlycloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
+            'cloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
+            'mostlycloudy': /hacsfiles/lovelace-animated-background/background-animations/mostlycloudy.html
+            'clear-night': /hacsfiles/lovelace-animated-background/background-animations/night.html
+            'fog': /hacsfiles/lovelace-animated-background/background-animations/fog.html
+            'rainy': /hacsfiles/lovelace-animated-background/background-animations/rainy.html
+views:
+  - path: home
+    title: Home
+    cards:
+      - entity: weather.home
+        type: weather-forecast
+  - path: display
+    title: Display
+    animated_background: weather #this is the line to add to your view to use the "weather" group configuration
+    cards:
+      - entity: weather.home
+        type: weather-forecast
 ```
 
 ## Use your own mp4 video file
