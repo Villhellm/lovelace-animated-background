@@ -130,7 +130,7 @@ function run() {
 }
 
 //return the currently selected lovelace view
-function currentView() {
+function currentViewPath() {
   return window.location.pathname.split('/')[2];
 }
 
@@ -259,17 +259,40 @@ function removeDefaultBackground() {
 
 }
 
+function getGroupConfig(name) {
+  var return_config = null;
+  if (!isNullOrUndefined(animatedConfig.groups)) {
+    animatedConfig.groups.forEach(group => {
+      if (!isNullOrUndefined(group.name)) {
+        if (group.name == name) {
+          if (!isNullOrUndefined(group.config)) {
+            return_config = group.config;
+          }
+        }
+      }
+    })
+  }
+  return return_config;
+}
+
 //return the current view configuration or null if none is found
 function currentConfig() {
-  var current_view = currentView();
+  var current_view_path = currentViewPath();
   var return_config = null;
   if (!isNullOrUndefined(animatedConfig)) {
     if (!isNullOrUndefined(animatedConfig.entity) || !isNullOrUndefined(animatedConfig.default_url)) {
       return_config = animatedConfig;
     }
+
+    if(!isNullOrUndefined(animatedConfig.group)){
+      if(!isNullOrUndefined(getGroupConfig(animatedConfig.group))){
+        return_config = getGroupConfig(animatedConfig.group);
+      }
+    }
+
     if (!isNullOrUndefined(animatedConfig.views)) {
       animatedConfig.views.forEach(view => {
-        if (view.path == current_view) {
+        if (view.path == current_view_path) {
           if (!isNullOrUndefined(view.config)) {
             return_config = view.config;
           }
@@ -278,6 +301,18 @@ function currentConfig() {
           }
         }
       });
+    }
+    if (!isNullOrUndefined(lovelace)) {
+      lovelace.config.views.forEach(view => {
+        if (view.path == currentViewPath()) {
+          if(!isNullOrUndefined(view.animated_background)){
+            var potential_config = getGroupConfig(view.animated_background);
+            if(!isNullOrUndefined(potential_config)){
+              return_config = potential_config;
+            }
+          }
+        }
+      })
     }
   }
   return return_config;
