@@ -214,7 +214,7 @@ function enabled() {
       }
     }
   }
-  
+
   return temp_enabled;
 }
 
@@ -287,12 +287,6 @@ function currentConfig() {
       return_config = animatedConfig;
     }
 
-    if (!isNullOrUndefined(animatedConfig.group)) {
-      if (!isNullOrUndefined(getGroupConfig(animatedConfig.group))) {
-        return_config = getGroupConfig(animatedConfig.group);
-      }
-    }
-
     if (!isNullOrUndefined(animatedConfig.views)) {
       animatedConfig.views.forEach(view => {
         if (view.path == current_view_path) {
@@ -305,6 +299,7 @@ function currentConfig() {
         }
       });
     }
+    
     if (!isNullOrUndefined(lovelace)) {
       lovelace.config.views.forEach(view => {
         if (view.path == currentViewPath()) {
@@ -315,7 +310,7 @@ function currentConfig() {
             }
           }
         }
-      })
+      });
     }
   }
   return return_config;
