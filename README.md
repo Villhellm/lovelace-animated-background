@@ -168,7 +168,8 @@ views:
         type: weather-forecast
   - path: display
     title: Display
-    animated_background: weather #this is the line to add to your view to use the "weather" group configuration
+    animated_background: weather #this is the line to add to your view to use the "weather" group configuration.
+    #Set to 'none' if you would like to disable the background for this view
     cards:
       - entity: weather.home
         type: weather-forecast

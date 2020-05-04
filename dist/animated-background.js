@@ -299,11 +299,14 @@ function currentConfig() {
         }
       });
     }
-    
+
     if (!isNullOrUndefined(lovelace)) {
       lovelace.config.views.forEach(view => {
         if (view.path == currentViewPath()) {
           if (!isNullOrUndefined(view.animated_background)) {
+            if(view.animated_background == "none"){
+              return_config = {enabled:false};
+            }
             var potential_config = getGroupConfig(view.animated_background);
             if (!isNullOrUndefined(potential_config)) {
               return_config = potential_config;
