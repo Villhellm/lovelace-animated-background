@@ -97,6 +97,9 @@ var panelObserver = new MutationObserver(function (mutations) {
         var wait_interval = setInterval(() => {
           get_vars()
           if (!isNullOrUndefined(hui)) {
+            previous_entity = null;
+            previous_state = null;
+            previous_url = null;
             loaded = false;
             run();
             clearInterval(wait_interval);
