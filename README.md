@@ -88,6 +88,7 @@ Configuration for Animated Background goes into the root of your Lovelace config
 | default_url | string | **Optional** | If no matching state is found, this is the fallback url
 | enabled | bool | **Optional** | Set to false to disable Animated Background
 | display_user_agent | bool | **Optional** | If set to true you will get an alert with your current user agent. This will help determine your device to use in `excluded_devices` or `included_devices`
+| debug | bool | **Optional** | Get more detailed log messages
 | views | list ([views](#view-configuration)) | **Optional** | Allows you to set custom configurations per view
 | groups | list ([group](#group-configuration)) | **Optional** | Allows you to set custom configurations that can be referenced in lovelace view configurations
 | entity | string | **Optional** | Entity to check for state changes
