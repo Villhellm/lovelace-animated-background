@@ -77,39 +77,41 @@ views: ...
 
 Configuration for Animated Background goes into the root of your Lovelace config.
 
-## Configuration Options
+## Animated Background Configuration Options
 
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
 | default_url | string | **Optional** | If no matching state is found, this is the fallback url
 | enabled | bool | **Optional** | Set to false to disable Animated Background
 | display_user_agent | bool | **Optional** | If set to true you will get an alert with your current user agent. This will help determine your device to use in `excluded_devices` or `included_devices`
-| views | list | **Optional** | Allows you to set custom configurations per view
-| groups | list | **Optional** | Allows you to set custom configurations that can be referenced in lovelace view configurations
+| views | list ([views](#view-configuration)) | **Optional** | Allows you to set custom configurations per view
+| groups | list ([group](#group-configuration)) | **Optional** | Allows you to set custom configurations that can be referenced in lovelace view configurations
 | entity | string | **Optional** | Entity to check for state changes
 | state_url | map | **Optional** | Map of states and urls. Required if `entity` is defined
-| included_users | list | **Optional** | List of users that will display animated background. If this option is set any users not included in this list will be excluded.
-| included_devices | list | **Optional** | List of devices that will display animated background. If this option is set any devices not included in this list will be excluded. Ex:  iphone, ipad, windows, macintosh, android
-| excluded_users | list | **Optional** | Users to be excluded
-| excluded_devices | list | **Optional** | Devices to be excluded Ex:  iphone, ipad, windows, macintosh, android
+| included_users | list (string) | **Optional** | List of users that will display animated background. If this option is set any users not included in this list will be excluded.
+| included_devices | list (string) | **Optional** | List of devices that will display animated background. If this option is set any devices not included in this list will be excluded. Ex:  iphone, ipad, windows, macintosh, android
+| excluded_users | list (string) | **Optional** | Users to be excluded
+| excluded_devices | list (string) | **Optional** | Devices to be excluded Ex:  iphone, ipad, windows, macintosh, android
 
 While all entries are optional, it is recommended to at least set `default_url` or `entity` with `state_url`. Without one of those set you would never know this plugin was installed. 
 
 Also note that if you make any changes to the included HTML files, i.e. inserting your own video files, make sure to move the files to a different directory so your changes are not overwritten when you update via HACS.
+
+## Stored Config
+
+| Name | Type | Requirement | Description
+| ---- | ---- | ------- | -----------
+| default_url | string | **Optional** | If no matching state is found, this is the fallback url
+| enabled | bool | **Optional** | Set to false to disable Animated Background
+| entity | string | **Optional** | Entity to check for state changes
+| state_url | map | **Optional** | Map of states and urls. Required if `entity` is defined
 
 ## View Configuration
 
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
 | path | string | **Required** | The path to the Lovelace view you want to configure. Whatever comes after `/lovelace/` in your view's url. Even if you are using a different dashboard than `/lovelace/`, you still just use the last part of the url.
-| config | config | **Required** | Same options as the above configuration excluding the device/user options
-
-## Group Configuration
-
-| Name | Type | Requirement | Description
-| ---- | ---- | ------- | -----------
-| name | string | **Required** | The name you would like to use to define your group.
-| config | config | **Required** | Same options as the above configuration excluding the device/user options
+| config | [config](#stored-config) | **Required** | Same options as the above configuration excluding the device/user options
 
 Ex:
 ```yaml
@@ -141,6 +143,13 @@ animated_background:
 title: Home
 views: ...
 ```
+
+## Group Configuration
+
+| Name | Type | Requirement | Description
+| ---- | ---- | ------- | -----------
+| name | string | **Required** | The name you would like to use to define your group.
+| config | [config](#stored-config) | **Required** | Same options as the above configuration excluding the device/user options
 
 ## How to use groups
 Groups can be used to easily reuse Animated Background configurations. After defining your `groups:` block with at least one entry, you can add a single line to any of your views to use this configuration. 
