@@ -20,6 +20,7 @@ let previous_state;
 let previous_entity;
 let previous_url;
 
+
 function STATUS_MESSAGE(message, force) {
   if (!debug_mode) {
     console.log(log_prefix + message);
@@ -33,7 +34,7 @@ function STATUS_MESSAGE(message, force) {
 
 function DEBUG_MESSAGE(message, object, only_if_view_not_loaded) {
   if (debug_mode) {
-    if(only_if_view_not_loaded && view_loaded){
+    if (only_if_view_not_loaded && view_loaded) {
       return;
     }
     console.log(debug_prefix + message);
@@ -171,12 +172,15 @@ function currentViewPath() {
 
 //bool returns whether current configuration exists in animated_config (different from enabled in that no haobj is required and is more flexible)
 
-//generic null/undefined helper function
+//generic null/undefined/empty helper function
 function isNullOrUndefined(obj) {
   if (obj == null) {
     return true;
   }
   if (obj == undefined) {
+    return true;
+  }
+  if (obj == "") {
     return true;
   }
   return false;
@@ -301,8 +305,10 @@ function enabled() {
       temp_enabled = true;
     }
   }
+
   loaded = true;
   view_loaded = true;
+
   return temp_enabled;
 }
 
@@ -334,7 +340,7 @@ function removeDefaultBackground() {
               meme_logged = true;
             }
           }
-          else{
+          else {
             viewLayout.style.background = null;
             viewNode.style.background = null;
           }
@@ -352,7 +358,7 @@ function removeDefaultBackground() {
                 meme_logged = true;
               }
             }
-            else{
+            else {
               viewLayout.style.background = null;
               viewNode.style.background = "var(--lovelace-background);";
             }
@@ -372,6 +378,9 @@ function removeDefaultBackground() {
 
 function getGroupConfig(name) {
   var return_config = null;
+  if(name == "none"){
+    return {enabled: false };
+  }
   if (!isNullOrUndefined(animatedConfig.groups)) {
     animatedConfig.groups.forEach(group => {
       if (!isNullOrUndefined(group.name)) {
@@ -407,26 +416,27 @@ function currentConfig() {
         }
       });
     }
-    if(!view_loaded){
-      DEBUG_MESSAGE("Current loaded Lovelace config", lovelace);
-    }
+
     var current_view_path = currentViewPath();
+    var current_view_config = lovelace.config.views[lovelace.current_view];
     if (!isNullOrUndefined(lovelace)) {
-      lovelace.config.views.forEach(view => {
-        if (view.path == current_view_path) {
-          if (!isNullOrUndefined(view.animated_background)) {
-            if (view.animated_background == "none") {
-              return_config = { enabled: false };
-            }
+      for (var i = 0; lovelace.config.views.length > i; i++) {
+        if (lovelace.config.views[i].path == current_view_path) {
+          current_view_config = lovelace.config.views[i];
+        }
+        else {
+          if (i.toString() == current_view_path.toString()) {
+            current_view_config = lovelace.config.views[i];
           }
         }
+      }
 
-        var potential_config = getGroupConfig(view.animated_background);
+      if (!isNullOrUndefined(current_view_config)) {
+        var potential_config = getGroupConfig(current_view_config.animated_background);
         if (!isNullOrUndefined(potential_config)) {
           return_config = potential_config;
         }
-      });
-
+      }
     }
   }
   return return_config;
@@ -435,12 +445,12 @@ function currentConfig() {
 //bool whether currentConfig returns a non-null value
 function currentViewEnabled() {
   var current_config = currentConfig();
-  if(isNullOrUndefined(current_config)){
+  if (isNullOrUndefined(current_config)) {
     DEBUG_MESSAGE("View switched, no configuration found");
     return false;
   }
-  else{
-    if(current_config.enabled == false){
+  else {
+    if (current_config.enabled == false) {
       //DEBUG_MESSAGE("View switched, current view is disabled", current_config);
     }
   }
