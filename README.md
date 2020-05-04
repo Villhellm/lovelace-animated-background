@@ -97,15 +97,6 @@ While all entries are optional, it is recommended to at least set `default_url` 
 
 Also note that if you make any changes to the included HTML files, i.e. inserting your own video files, make sure to move the files to a different directory so your changes are not overwritten when you update via HACS.
 
-## Stored Config
-
-| Name | Type | Requirement | Description
-| ---- | ---- | ------- | -----------
-| default_url | string | **Optional** | If no matching state is found, this is the fallback url
-| enabled | bool | **Optional** | Set to false to disable Animated Background
-| entity | string | **Optional** | Entity to check for state changes
-| state_url | map | **Optional** | Map of states and urls. Required if `entity` is defined
-
 ## View Configuration
 
 | Name | Type | Requirement | Description
@@ -151,7 +142,6 @@ views: ...
 | name | string | **Required** | The name you would like to use to define your group.
 | config | [config](#stored-config) | **Required** | Same options as the above configuration excluding the device/user options
 
-## How to use groups
 Groups can be used to easily reuse Animated Background configurations. After defining your `groups:` block with at least one entry, you can add a single line to any of your views to use this configuration. 
 
 Ex:
@@ -183,6 +173,15 @@ views:
       - entity: weather.home
         type: weather-forecast
 ```
+
+## Stored Config
+
+| Name | Type | Requirement | Description
+| ---- | ---- | ------- | -----------
+| default_url | string | **Optional** | If no matching state is found, this is the fallback url
+| enabled | bool | **Optional** | Set to false to disable Animated Background
+| entity | string | **Optional** | Entity to check for state changes
+| state_url | map | **Optional** | Map of states and urls. Required if `entity` is defined
 
 ## Use your own mp4 video file
 If you would like to use your own video file, go into the desired HTML file and find the script block. This block contains a method that will randomly select a video in the `cinemagraphs` array each time the HTML file is loaded. If you only want one video file you can remove all other options and change the url to your desired mp4.
