@@ -262,10 +262,9 @@ function enabled() {
     if (current_config.enabled == false) {
       temp_enabled = false;
     }
-  }
-
-  else {
-    temp_enabled = false;
+    else{
+      temp_enabled = true;
+    }
   }
 
   return temp_enabled;
