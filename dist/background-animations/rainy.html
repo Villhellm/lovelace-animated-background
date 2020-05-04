@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Fog</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <style type="text/css">
+    body {
+      min-height: 100vh;
+      min-width: 100vw;
+      max-height: 100%;
+      max-width: 100%;
+      overflow: hidden;
+      margin: 0;
+      position: relative;
+    }
+
+    video {
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+
+</head>
+
+<body>
+  <video id="cinemagraph" autoplay="" loop="" preload="" playsinline="" muted="" poster="">
+    <source src="" type="video/mp4">
+  </video>
+  <script>
+    function randomIntFromInterval(min, max) { // min and max included 
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+    var cinemagraphs = [
+      "https://cdn.flixel.com/flixel/f0w23bd0enxur5ff0bxz.hd.mp4"
+    ];
+    document.getElementById("cinemagraph").setAttribute("src", cinemagraphs[randomIntFromInterval(0, cinemagraphs.length - 1)]); 
+  </script>
+</body>
+
+</html>

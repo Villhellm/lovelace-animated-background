@@ -37,6 +37,8 @@ animated_background:
     'mostlycloudy': /local/animated-background/background-animations/mostlycloudy.html
     'clear-night': /local/animated-background/background-animations/night.html
     'fog': /local/animated-background/background-animations/fog.html
+    'rainy': /local/animated-background/background-animations/rainy.html
+
 title: Home
 views: ...
 ```
@@ -69,6 +71,8 @@ animated_background:
     'mostlycloudy': /hacsfiles/lovelace-animated-background/background-animations/mostlycloudy.html
     'clear-night': /hacsfiles/lovelace-animated-background/background-animations/night.html
     'fog': /hacsfiles/lovelace-animated-background/background-animations/fog.html
+    'rainy': /hacsfiles/lovelace-animated-background/background-animations/rainy.html
+
 title: Home
 views: ...
 ```
@@ -123,6 +127,8 @@ animated_background:
     'mostlycloudy': /hacsfiles/lovelace-animated-background/background-animations/mostlycloudy.html
     'clear-night': /hacsfiles/lovelace-animated-background/background-animations/night.html
     'fog': /hacsfiles/lovelace-animated-background/background-animations/fog.html
+    'rainy': /hacsfiles/lovelace-animated-background/background-animations/rainy.html
+
   views:
     - path: gaming
       config:
