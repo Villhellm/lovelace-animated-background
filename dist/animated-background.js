@@ -319,6 +319,10 @@ function removeDefaultBackground() {
               meme_logged = true;
             }
           }
+          else{
+            viewLayout.style.background = null;
+            viewNode.style.background = null;
+          }
         }
         else {
           viewNode = root.shadowRoot.getElementById("view");
@@ -332,6 +336,10 @@ function removeDefaultBackground() {
                 DEBUG_MESSAGE("Removing view background", currentConfig());
                 meme_logged = true;
               }
+            }
+            else{
+              viewLayout.style.background = null;
+              viewNode.style.background = null;
             }
           }
         }
