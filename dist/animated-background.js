@@ -13,6 +13,7 @@ var haobj = null;
 var view;
 var debug_mode = false;
 var loaded = false;
+var view_loaded = false;
 
 //state tracking variables
 let previous_state;
@@ -30,8 +31,11 @@ function STATUS_MESSAGE(message, force) {
   }
 }
 
-function DEBUG_MESSAGE(message, object) {
+function DEBUG_MESSAGE(message, object, only_if_view_not_loaded) {
   if (debug_mode) {
+    if(only_if_view_not_loaded && view_loaded){
+      return;
+    }
     console.log(debug_prefix + message);
     if (!isNullOrUndefined(object)) {
       console.log(object);
@@ -66,6 +70,7 @@ function get_vars() {
 var viewObserver = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.addedNodes.length > 0) {
+      view_loaded = false;
       if (currentViewEnabled()) {
         renderBackgroundHTML();
         removeDefaultBackground();
@@ -186,7 +191,12 @@ function enabled() {
       if (!loaded) {
         debug_mode = animatedConfig.debug;
         DEBUG_MESSAGE("Debug mode enabled", haobj);
-        loaded = true;
+
+        if (!isNullOrUndefined(animatedConfig.display_user_agent)) {
+          if (animatedConfig.display_user_agent == true) {
+            alert(navigator.userAgent);
+          }
+        }
       }
 
     }
@@ -208,12 +218,6 @@ function enabled() {
     return false;
   }
 
-  if (!isNullOrUndefined(animatedConfig.display_user_agent)) {
-    if (animatedConfig.display_user_agent == true) {
-      alert(navigator.userAgent);
-    }
-  }
-
   var temp_enabled = true;
 
   if (isNullOrUndefined(current_config)) {
@@ -222,24 +226,26 @@ function enabled() {
 
   if (!isNullOrUndefined(animatedConfig.excluded_devices)) {
     if (animatedConfig.excluded_devices.some(device_included)) {
+      DEBUG_MESSAGE("Current device is excluded", null, true);
       temp_enabled = false;
     }
   }
-  else {
-    if (!isNullOrUndefined(current_config.excluded_devices)) {
-      if (current_config.excluded_devices.some(device_included)) {
-        temp_enabled = false;
-      }
+  if (!isNullOrUndefined(current_config.excluded_devices)) {
+    if (current_config.excluded_devices.some(device_included)) {
+      DEBUG_MESSAGE("Current device is excluded", null, true);
+      temp_enabled = false;
     }
   }
 
   if (!isNullOrUndefined(animatedConfig.excluded_users)) {
     if (animatedConfig.excluded_users.map(username => username.toLowerCase()).includes(haobj.user.name.toLowerCase())) {
+      DEBUG_MESSAGE("Current user: " + haobj.user.name + " is excluded", null, true);
       temp_enabled = false;
     }
   }
   if (!isNullOrUndefined(current_config.excluded_users)) {
     if (current_config.excluded_users.map(username => username.toLowerCase()).includes(haobj.user.name.toLowerCase())) {
+      DEBUG_MESSAGE("Current user: " + haobj.user.name + " is excluded", null, true);
       temp_enabled = false;
     }
   }
@@ -249,6 +255,7 @@ function enabled() {
       temp_enabled = true;
     }
     else {
+      DEBUG_MESSAGE("Current user: " + haobj.user.name + " is not included", null, true);
       temp_enabled = false;
     }
   }
@@ -257,6 +264,7 @@ function enabled() {
       temp_enabled = true;
     }
     else {
+      DEBUG_MESSAGE("Current user: " + haobj.user.name + " is not included", null, true);
       temp_enabled = false;
     }
   }
@@ -266,6 +274,7 @@ function enabled() {
       temp_enabled = true;
     }
     else {
+      DEBUG_MESSAGE("Current device is not included", null, true);
       temp_enabled = false;
     }
   }
@@ -275,19 +284,22 @@ function enabled() {
       temp_enabled = true;
     }
     else {
+      DEBUG_MESSAGE("Current device is not included", null, true);
       temp_enabled = false;
     }
   }
 
   if (!isNullOrUndefined(current_config.enabled)) {
     if (current_config.enabled == false) {
+      DEBUG_MESSAGE("Current config is disabled", null, true);
       temp_enabled = false;
     }
     else {
       temp_enabled = true;
     }
   }
-
+  loaded = true;
+  view_loaded = true;
   return temp_enabled;
 }
 
@@ -392,10 +404,10 @@ function currentConfig() {
         }
       });
     }
-
+    var current_view_path = currentViewPath();
     if (!isNullOrUndefined(lovelace)) {
       lovelace.config.views.forEach(view => {
-        if (view.path == currentViewPath()) {
+        if (view.path == current_view_path) {
           if (!isNullOrUndefined(view.animated_background)) {
             if (view.animated_background == "none") {
               return_config = { enabled: false };
@@ -417,10 +429,11 @@ function currentViewEnabled() {
   var current_config = currentConfig();
   if(isNullOrUndefined(current_config)){
     DEBUG_MESSAGE("View switched, no configuration found");
+    return false;
   }
   else{
     if(current_config.enabled == false){
-      DEBUG_MESSAGE("View switched, current view is disabled", current_config);
+      //DEBUG_MESSAGE("View switched, current view is disabled", current_config);
     }
   }
   return !isNullOrUndefined(current_config);
