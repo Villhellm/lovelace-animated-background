@@ -214,6 +214,9 @@ function enabled() {
       }
     }
   }
+  else{
+    temp_enabled = false;
+  }
 
   return temp_enabled;
 }
@@ -339,7 +342,7 @@ function renderBackgroundHTML() {
   }
 
   //get state of config object 
-  if (selectedConfig.entity) {
+  if (!isNullOrUndefined(selectedConfig.entity)) {
     var current_state = haobj.states[selectedConfig.entity].state;
     if (previous_state != current_state) {
       console.log("Animated Background: Configured entity " + selectedConfig.entity + " is now " + current_state);
