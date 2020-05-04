@@ -297,13 +297,13 @@ function device_included(element, index, array) {
 }
 
 //remove background every 100 milliseconds for 2 seconds because race condition memes.
-var memeRemover = null;
-var memeCount = 0;
-var memeLogged = false;
+var meme_remover = null;
+var meme_count = 0;
+var meme_logged = false;
 function removeDefaultBackground() {
-  if (isNullOrUndefined(memeRemover)) {
-    memeLogged = false;
-    memeRemover = setInterval(() => {
+  if (isNullOrUndefined(meme_remover)) {
+    meme_logged = false;
+    meme_remover = setInterval(() => {
       get_vars();
       var viewNode = null;
       var temp_enabled = enabled();
@@ -314,9 +314,9 @@ function removeDefaultBackground() {
           if (temp_enabled) {
             viewNode.style.background = 'transparent';
             viewLayout.style.background = 'transparent';
-            if (!memeLogged) {
+            if (!meme_logged) {
               DEBUG_MESSAGE("Removing view background", currentConfig());
-              memeLogged = true;
+              meme_logged = true;
             }
           }
         }
@@ -327,20 +327,20 @@ function removeDefaultBackground() {
             if (temp_enabled) {
               viewNode.style.background = 'transparent';
               viewLayout.style.background = 'transparent';
-              if (!memeLogged) {
+              if (!meme_logged) {
                 DEBUG_MESSAGE("Panel mode detected");
                 DEBUG_MESSAGE("Removing view background", currentConfig());
-                memeLogged = true;
+                meme_logged = true;
               }
             }
           }
         }
       }
-      memeCount++;
-      if (memeCount > 20) {
-        clearInterval(memeRemover);
-        memeRemover = null;
-        memeCount = 0;
+      meme_count++;
+      if (meme_count > 20) {
+        clearInterval(meme_remover);
+        meme_remover = null;
+        meme_count = 0;
       }
     }, 100);
   }
@@ -407,6 +407,14 @@ function currentConfig() {
 //bool whether currentConfig returns a non-null value
 function currentViewEnabled() {
   var current_config = currentConfig();
+  if(isNullOrUndefined(current_config)){
+    DEBUG_MESSAGE("View switched, no configuration found");
+  }
+  else{
+    if(current_config.enabled == false){
+      DEBUG_MESSAGE("View switched, current view is disabled", current_config);
+    }
+  }
   return !isNullOrUndefined(current_config);
 }
 
