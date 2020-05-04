@@ -193,7 +193,7 @@ function enabled() {
     if (!isNullOrUndefined(animatedConfig.debug)) {
       if (!loaded) {
         debug_mode = animatedConfig.debug;
-        DEBUG_MESSAGE("Debug mode enabled", haobj);
+        DEBUG_MESSAGE("Debug mode enabled");
 
         if (!isNullOrUndefined(animatedConfig.display_user_agent)) {
           if (animatedConfig.display_user_agent == true) {
