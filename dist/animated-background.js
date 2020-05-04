@@ -354,7 +354,7 @@ function removeDefaultBackground() {
             }
             else{
               viewLayout.style.background = null;
-              viewNode.style.background = null;
+              viewNode.style.background = "var(--lovelace-background);";
             }
           }
         }
@@ -406,6 +406,9 @@ function currentConfig() {
           }
         }
       });
+    }
+    if(!view_loaded){
+      DEBUG_MESSAGE("Current loaded Lovelace config", lovelace);
     }
     var current_view_path = currentViewPath();
     if (!isNullOrUndefined(lovelace)) {
