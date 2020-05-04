@@ -148,15 +148,15 @@ function configured() {
         if (current.enabled == false) {
           temp_configured = false;
         }
-        else{
+        else {
           temp_configured = true;
         }
       }
-      else{
+      else {
         temp_configured = true;
       }
     }
-    else{
+    else {
       temp_configured = false;
     }
   }
@@ -188,16 +188,35 @@ function enabled() {
   }
 
   var temp_enabled = true;
+  var current_config = currentConfig();
+
+  if (isNullOrUndefined(current_config)) {
+    return false;
+  }
 
   if (!isNullOrUndefined(animatedConfig.excluded_devices)) {
     if (animatedConfig.excluded_devices.some(device_included)) {
       temp_enabled = false;
     }
   }
+  else {
+    if (!isNullOrUndefined(current_config.excluded_devices)) {
+      if (current_config.excluded_devices.some(device_included)) {
+        temp_enabled = false;
+      }
+    }
+  }
 
   if (!isNullOrUndefined(animatedConfig.excluded_users)) {
     if (animatedConfig.excluded_users.map(username => username.toLowerCase()).includes(haobj.user.name.toLowerCase())) {
       temp_enabled = false;
+    }
+  }
+  else {
+    if (!isNullOrUndefined(current_config.excluded_users)) {
+      if (current_config.excluded_users.map(username => username.toLowerCase()).includes(haobj.user.name.toLowerCase())) {
+        temp_enabled = false;
+      }
     }
   }
 
@@ -209,6 +228,16 @@ function enabled() {
       temp_enabled = false;
     }
   }
+  else {
+    if (!isNullOrUndefined(current_config.included_users)) {
+      if (current_config.included_users.map(username => username.toLowerCase()).includes(haobj.user.name.toLowerCase())) {
+        temp_enabled = true;
+      }
+      else {
+        temp_enabled = false;
+      }
+    }
+  }
 
   if (!isNullOrUndefined(animatedConfig.included_devices)) {
     if (animatedConfig.included_devices.some(device_included)) {
@@ -218,15 +247,24 @@ function enabled() {
       temp_enabled = false;
     }
   }
-  var current = currentConfig();
-  if (!isNullOrUndefined(current)) {
-    if (!isNullOrUndefined(current.enabled)) {
-      if (current.enabled == false) {
+  else {
+    if (!isNullOrUndefined(current_config.included_devices)) {
+      if (current_config.included_devices.some(device_included)) {
+        temp_enabled = true;
+      }
+      else {
         temp_enabled = false;
       }
     }
   }
-  else{
+
+  if (!isNullOrUndefined(current_config.enabled)) {
+    if (current_config.enabled == false) {
+      temp_enabled = false;
+    }
+  }
+
+  else {
     temp_enabled = false;
   }
 
@@ -321,8 +359,8 @@ function currentConfig() {
       lovelace.config.views.forEach(view => {
         if (view.path == currentViewPath()) {
           if (!isNullOrUndefined(view.animated_background)) {
-            if(view.animated_background == "none"){
-              return_config = {enabled:false};
+            if (view.animated_background == "none") {
+              return_config = { enabled: false };
             }
             var potential_config = getGroupConfig(view.animated_background);
             if (!isNullOrUndefined(potential_config)) {

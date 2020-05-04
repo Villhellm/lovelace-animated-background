@@ -106,7 +106,7 @@ Also note that if you make any changes to the included HTML files, i.e. insertin
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
 | path | string | **Required** | The path to the Lovelace view you want to configure. Whatever comes after `/lovelace/` in your view's url. Even if you are using a different dashboard than `/lovelace/`, you still just use the last part of the url.
-| config | [config](#stored-config) | **Required** | Same options as the above configuration excluding the device/user options
+| config | [config](#stored-config) | **Required** | See [stored config](#stored-config) for requirements and options
 
 Ex:
 ```yaml
@@ -146,7 +146,7 @@ views: ...
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
 | name | string | **Required** | The name you would like to use to define your group.
-| config | [config](#stored-config) | **Required** | Same options as the above configuration excluding the device/user options
+| config | [config](#stored-config) | **Required** | See [stored config](#stored-config) for requirements and options
 
 Groups can be used to easily reuse Animated Background configurations. After defining your `groups:` block with at least one entry, you can add a single line to any of your views to use this configuration. 
 
@@ -189,6 +189,10 @@ views:
 | enabled | bool | **Optional** | Set to false to disable Animated Background
 | entity | string | **Optional** | Entity to check for state changes
 | state_url | map | **Optional** | Map of states and urls. Required if `entity` is defined
+| included_users | list (string) | **Optional** | List of users that will display animated background. If this option is set any users not included in this list will be excluded.
+| included_devices | list (string) | **Optional** | List of devices that will display animated background. If this option is set any devices not included in this list will be excluded. Ex:  iphone, ipad, windows, macintosh, android
+| excluded_users | list (string) | **Optional** | Users to be excluded
+| excluded_devices | list (string) | **Optional** | Devices to be excluded Ex:  iphone, ipad, windows, macintosh, android
 
 ## Use your own mp4 video file
 If you would like to use your own video file, go into the desired HTML file and find the script block. This block contains a method that will randomly select a video in the `cinemagraphs` array each time the HTML file is loaded. If you only want one video file you can remove all other options and change the url to your desired mp4.
