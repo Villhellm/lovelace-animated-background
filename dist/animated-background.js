@@ -207,11 +207,14 @@ function enabled() {
     }
   }
   var current = currentConfig();
-  if (!isNullOrUndefined(current.enabled)) {
-    if (current.enabled == false) {
-      temp_enabled = false;
+  if (!isNullOrUndefined(current)) {
+    if (!isNullOrUndefined(current.enabled)) {
+      if (current.enabled == false) {
+        temp_enabled = false;
+      }
     }
   }
+  
   return temp_enabled;
 }
 
@@ -284,8 +287,8 @@ function currentConfig() {
       return_config = animatedConfig;
     }
 
-    if(!isNullOrUndefined(animatedConfig.group)){
-      if(!isNullOrUndefined(getGroupConfig(animatedConfig.group))){
+    if (!isNullOrUndefined(animatedConfig.group)) {
+      if (!isNullOrUndefined(getGroupConfig(animatedConfig.group))) {
         return_config = getGroupConfig(animatedConfig.group);
       }
     }
@@ -305,9 +308,9 @@ function currentConfig() {
     if (!isNullOrUndefined(lovelace)) {
       lovelace.config.views.forEach(view => {
         if (view.path == currentViewPath()) {
-          if(!isNullOrUndefined(view.animated_background)){
+          if (!isNullOrUndefined(view.animated_background)) {
             var potential_config = getGroupConfig(view.animated_background);
-            if(!isNullOrUndefined(potential_config)){
+            if (!isNullOrUndefined(potential_config)) {
               return_config = potential_config;
             }
           }
