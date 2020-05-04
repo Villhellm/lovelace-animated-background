@@ -37,6 +37,8 @@ animated_background:
     'mostlycloudy': /local/animated-background/background-animations/mostlycloudy.html
     'clear-night': /local/animated-background/background-animations/night.html
     'fog': /local/animated-background/background-animations/fog.html
+    'rainy': /local/animated-background/background-animations/rainy.html
+
 title: Home
 views: ...
 ```
@@ -69,6 +71,8 @@ animated_background:
     'mostlycloudy': /hacsfiles/lovelace-animated-background/background-animations/mostlycloudy.html
     'clear-night': /hacsfiles/lovelace-animated-background/background-animations/night.html
     'fog': /hacsfiles/lovelace-animated-background/background-animations/fog.html
+    'rainy': /hacsfiles/lovelace-animated-background/background-animations/rainy.html
+
 title: Home
 views: ...
 ```
@@ -77,20 +81,22 @@ views: ...
 
 Configuration for Animated Background goes into the root of your Lovelace config.
 
-## Configuration Options
+## Animated Background Configuration Options
 
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
 | default_url | string | **Optional** | If no matching state is found, this is the fallback url
 | enabled | bool | **Optional** | Set to false to disable Animated Background
 | display_user_agent | bool | **Optional** | If set to true you will get an alert with your current user agent. This will help determine your device to use in `excluded_devices` or `included_devices`
-| views | list | **Optional** | Allows you to set custom configurations per view
+| debug | bool | **Optional** | Get more detailed log messages
+| views | list ([views](#view-configuration)) | **Optional** | Allows you to set custom configurations per view
+| groups | list ([group](#group-configuration)) | **Optional** | Allows you to set custom configurations that can be referenced in lovelace view configurations
 | entity | string | **Optional** | Entity to check for state changes
 | state_url | map | **Optional** | Map of states and urls. Required if `entity` is defined
-| included_users | list | **Optional** | List of users that will display animated background. If this option is set any users not included in this list will be excluded.
-| included_devices | list | **Optional** | List of devices that will display animated background. If this option is set any devices not included in this list will be excluded. Ex:  iphone, ipad, windows, macintosh, android
-| excluded_users | list | **Optional** | Users to be excluded
-| excluded_devices | list | **Optional** | Devices to be excluded Ex:  iphone, ipad, windows, macintosh, android
+| included_users | list (string) | **Optional** | List of users that will display animated background. If this option is set any users not included in this list will be excluded.
+| included_devices | list (string) | **Optional** | List of devices that will display animated background. If this option is set any devices not included in this list will be excluded. Ex:  iphone, ipad, windows, macintosh, android
+| excluded_users | list (string) | **Optional** | Users to be excluded
+| excluded_devices | list (string) | **Optional** | Devices to be excluded Ex:  iphone, ipad, windows, macintosh, android
 
 While all entries are optional, it is recommended to at least set `default_url` or `entity` with `state_url`. Without one of those set you would never know this plugin was installed. 
 
@@ -101,7 +107,7 @@ Also note that if you make any changes to the included HTML files, i.e. insertin
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
 | path | string | **Required** | The path to the Lovelace view you want to configure. Whatever comes after `/lovelace/` in your view's url. Even if you are using a different dashboard than `/lovelace/`, you still just use the last part of the url.
-| config | config | **Required** | Same options as the above configuration excluding the device/user options
+| config | [config](#stored-config) | **Required** | See [stored config](#stored-config) for requirements and options
 
 Ex:
 ```yaml
@@ -122,6 +128,8 @@ animated_background:
     'mostlycloudy': /hacsfiles/lovelace-animated-background/background-animations/mostlycloudy.html
     'clear-night': /hacsfiles/lovelace-animated-background/background-animations/night.html
     'fog': /hacsfiles/lovelace-animated-background/background-animations/fog.html
+    'rainy': /hacsfiles/lovelace-animated-background/background-animations/rainy.html
+
   views:
     - path: gaming
       config:
@@ -133,6 +141,59 @@ animated_background:
 title: Home
 views: ...
 ```
+
+## Group Configuration
+
+| Name | Type | Requirement | Description
+| ---- | ---- | ------- | -----------
+| name | string | **Required** | The name you would like to use to define your group.
+| config | [config](#stored-config) | **Required** | See [stored config](#stored-config) for requirements and options
+
+Groups can be used to easily reuse Animated Background configurations. After defining your `groups:` block with at least one entry, you can add a single line to any of your views to use this configuration. 
+
+Ex:
+```yaml
+animated_background:
+  default_url: /hacsfiles/lovelace-animated-background/background-animations/night.html
+  groups:
+    - name: weather
+      config:
+        entity: "weather.home"
+        state_url:
+            'sunny': /hacsfiles/lovelace-animated-background/background-animations/sunny.html
+            'partlycloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
+            'cloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
+            'mostlycloudy': /hacsfiles/lovelace-animated-background/background-animations/mostlycloudy.html
+            'clear-night': /hacsfiles/lovelace-animated-background/background-animations/night.html
+            'fog': /hacsfiles/lovelace-animated-background/background-animations/fog.html
+            'rainy': /hacsfiles/lovelace-animated-background/background-animations/rainy.html
+views:
+  - path: home
+    title: Home
+    cards:
+      - entity: weather.home
+        type: weather-forecast
+  - path: display
+    title: Display
+    animated_background: weather #this is the line to add to your view to use the "weather" group configuration.
+    #Set to 'none' if you would like to disable the background for this view
+    cards:
+      - entity: weather.home
+        type: weather-forecast
+```
+
+## Stored Config
+
+| Name | Type | Requirement | Description
+| ---- | ---- | ------- | -----------
+| default_url | string | **Optional** | If no matching state is found, this is the fallback url
+| enabled | bool | **Optional** | Set to false to disable Animated Background
+| entity | string | **Optional** | Entity to check for state changes
+| state_url | map | **Optional** | Map of states and urls. Required if `entity` is defined
+| included_users | list (string) | **Optional** | List of users that will display animated background. If this option is set any users not included in this list will be excluded.
+| included_devices | list (string) | **Optional** | List of devices that will display animated background. If this option is set any devices not included in this list will be excluded. Ex:  iphone, ipad, windows, macintosh, android
+| excluded_users | list (string) | **Optional** | Users to be excluded
+| excluded_devices | list (string) | **Optional** | Devices to be excluded Ex:  iphone, ipad, windows, macintosh, android
 
 ## Use your own mp4 video file
 If you would like to use your own video file, go into the desired HTML file and find the script block. This block contains a method that will randomly select a video in the `cinemagraphs` array each time the HTML file is loaded. If you only want one video file you can remove all other options and change the url to your desired mp4.
