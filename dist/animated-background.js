@@ -143,12 +143,24 @@ function configured() {
     }
 
     var current = currentConfig();
-    if (!isNullOrUndefined(current.enabled)) {
-      if (current.enabled == false) {
-        temp_configured = false;
+    if (!isNullOrUndefined(current)) {
+      if (!isNullOrUndefined(current.enabled)) {
+        if (current.enabled == false) {
+          temp_configured = false;
+        }
+        else{
+          temp_configured = true;
+        }
+      }
+      else{
+        temp_configured = true;
       }
     }
+    else{
+      temp_configured = false;
+    }
   }
+
   return temp_configured;
 }
 
@@ -234,11 +246,13 @@ function removeDefaultBackground() {
     memeRemover = setInterval(() => {
       get_vars();
       var viewNode = null;
+      var temp_configured = configured();
+      var temp_enabled = enabled();
       if (!isNullOrUndefined(root)) {
         viewNode = root.shadowRoot.getElementById("view");
         viewNode = viewNode.querySelector('hui-view');
         if (!isNullOrUndefined(viewNode)) {
-          if (configured() && enabled()) {
+          if (temp_configured && temp_enabled) {
             viewNode.style.background = 'transparent';
             viewLayout.style.background = 'transparent';
           }
@@ -247,7 +261,7 @@ function removeDefaultBackground() {
           viewNode = root.shadowRoot.getElementById("view");
           viewNode = viewNode.querySelector("hui-panel-view");
           if (!isNullOrUndefined(viewNode)) {
-            if (configured() && enabled()) {
+            if (temp_configured && temp_enabled) {
               viewNode.style.background = 'transparent';
               viewLayout.style.background = 'transparent';
             }
