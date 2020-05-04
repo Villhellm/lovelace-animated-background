@@ -419,7 +419,7 @@ function currentConfig() {
 
     var current_view_path = currentViewPath();
     var current_view_config = lovelace.config.views[lovelace.current_view];
-    if (!isNullOrUndefined(lovelace)) {
+    if (!isNullOrUndefined(lovelace) && !isNullOrUndefined(current_view_path)) {
       for (var i = 0; lovelace.config.views.length > i; i++) {
         if (lovelace.config.views[i].path == current_view_path) {
           current_view_config = lovelace.config.views[i];
