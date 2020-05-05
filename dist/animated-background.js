@@ -323,7 +323,7 @@ function enabled() {
     }
     temp_enabled = false;
   }
-  else {
+  if(current_config.enabled == true){
     temp_enabled = true;
   }
 
