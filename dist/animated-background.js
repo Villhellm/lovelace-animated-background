@@ -74,9 +74,7 @@ var View_Observer = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.addedNodes.length > 0) {
       View_Loaded = false;
-      if (enabled()) {
-        renderBackgroundHTML();
-      }
+      renderBackgroundHTML();
     }
   });
 });
@@ -191,12 +189,7 @@ function currentConfig() {
         var current_url = return_config.state_url[current_state];
         if (current_url) {
           if (current_url == "none") {
-            var current_entity = return_config.entity;
-            return_config = { enabled: false, reason: "current state('" + current_state + "') state_url is set to 'none'" };
-            if (Previous_State != current_state) {
-              STATUS_MESSAGE("Configured entity " + current_entity + " is now " + current_state, true);
-              Previous_State = current_state;
-            }
+            return_config = { enabled: false, reason: "current state('" + current_state + "') state_url is set to 'none'", entity: return_config.entity };
           }
         }
       }
@@ -212,23 +205,6 @@ function enabled() {
   if (Animated_Config) {
     if (Animated_Config.default_url || Animated_Config.entity || Animated_Config.views || Animated_Config.groups) {
       temp_enabled = true;
-    }
-
-    if (Animated_Config.debug) {
-      if (!Loaded) {
-        Debug_Mode = Animated_Config.debug;
-        DEBUG_MESSAGE("Debug mode enabled");
-
-        if (Animated_Config.display_user_agent) {
-          if (Animated_Config.display_user_agent == true) {
-            alert(navigator.userAgent);
-          }
-        }
-      }
-
-    }
-    else {
-      Debug_Mode = false;
     }
   }
   else {
@@ -251,27 +227,35 @@ function enabled() {
 
   if (Animated_Config.excluded_devices) {
     if (Animated_Config.excluded_devices.some(deviceIncluded)) {
-      DEBUG_MESSAGE("Current device is excluded", null, true);
-      temp_enabled = false;
+      if (temp_enabled) {
+        DEBUG_MESSAGE("Current device is excluded", null, true);
+        temp_enabled = false;
+      }
     }
   }
   if (current_config.excluded_devices) {
     if (current_config.excluded_devices.some(deviceIncluded)) {
-      DEBUG_MESSAGE("Current device is excluded", null, true);
-      temp_enabled = false;
+      if (temp_enabled) {
+        DEBUG_MESSAGE("Current device is excluded", null, true);
+        temp_enabled = false;
+      }
     }
   }
 
   if (Animated_Config.excluded_users) {
     if (Animated_Config.excluded_users.map(username => username.toLowerCase()).includes(Haobj.user.name.toLowerCase())) {
-      DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is excluded", null, true);
-      temp_enabled = false;
+      if (temp_enabled) {
+        DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is excluded", null, true);
+        temp_enabled = false;
+      }
     }
   }
   if (current_config.excluded_users) {
     if (current_config.excluded_users.map(username => username.toLowerCase()).includes(Haobj.user.name.toLowerCase())) {
-      DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is excluded", null, true);
-      temp_enabled = false;
+      if (temp_enabled) {
+        DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is excluded", null, true);
+        temp_enabled = false;
+      }
     }
   }
 
@@ -280,8 +264,10 @@ function enabled() {
       temp_enabled = true;
     }
     else {
-      DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is not included", null, true);
-      temp_enabled = false;
+      if (temp_enabled) {
+        DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is not included", null, true);
+        temp_enabled = false;
+      }
     }
   }
   if (current_config.included_users) {
@@ -289,8 +275,10 @@ function enabled() {
       temp_enabled = true;
     }
     else {
-      DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is not included", null, true);
-      temp_enabled = false;
+      if (temp_enabled) {
+        DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is not included", null, true);
+        temp_enabled = false;
+      }
     }
   }
 
@@ -299,8 +287,10 @@ function enabled() {
       temp_enabled = true;
     }
     else {
-      DEBUG_MESSAGE("Current device is not included", null, true);
-      temp_enabled = false;
+      if (temp_enabled) {
+        DEBUG_MESSAGE("Current device is not included", null, true);
+        temp_enabled = false;
+      }
     }
   }
 
@@ -309,26 +299,19 @@ function enabled() {
       temp_enabled = true;
     }
     else {
-      DEBUG_MESSAGE("Current device is not included", null, true);
-      temp_enabled = false;
+      if (temp_enabled) {
+        DEBUG_MESSAGE("Current device is not included", null, true);
+        temp_enabled = false;
+      }
     }
   }
 
   if (current_config.enabled == false) {
-    if (current_config.reason) {
-      DEBUG_MESSAGE("Current config is disabled because " + current_config.reason, null, true);
-    }
-    else {
-      DEBUG_MESSAGE("Current config is disabled", null, true);
-    }
     temp_enabled = false;
   }
   if (current_config.enabled == true) {
     temp_enabled = true;
   }
-
-  Loaded = true;
-  View_Loaded = true;
 
   return temp_enabled;
 }
@@ -347,16 +330,16 @@ function getEntityState(entity) {
 
 //main render function
 function renderBackgroundHTML() {
-  processDefaultBackground();
-  if (!enabled()) {
+  var current_config = currentConfig();
+  var state_url = "";
+
+  if (!current_config) {
+    DEBUG_MESSAGE("No configuration found for this view");
     return;
   }
 
-  var state_url = "";
-  var current_config = currentConfig();
-
   //rerender background if entity has changed (to avoid no background refresh if the new entity happens to have the same state)
-  if (Previous_Entity != current_config.entity) {
+  if (current_config.entity && Previous_Entity != current_config.entity) {
     Previous_State = null;
   }
 
@@ -366,12 +349,14 @@ function renderBackgroundHTML() {
     if (Previous_State != current_state) {
       View_Loaded = false;
       STATUS_MESSAGE("Configured entity " + current_config.entity + " is now " + current_state, true);
-      if (current_config.state_url[current_state]) {
-        state_url = current_config.state_url[current_state];
-      }
-      else {
-        if (current_config.default_url) {
-          state_url = current_config.default_url;
+      if (current_config.state_url) {
+        if (current_config.state_url[current_state]) {
+          state_url = current_config.state_url[current_state];
+        }
+        else {
+          if (current_config.default_url) {
+            state_url = current_config.default_url;
+          }
         }
       }
       Previous_State = current_state;
@@ -383,6 +368,8 @@ function renderBackgroundHTML() {
       state_url = current_config.default_url;
     }
   }
+
+  processDefaultBackground();
 
   var html_to_render;
   if (state_url != "" && Hui) {
@@ -431,12 +418,15 @@ function processDefaultBackground() {
     Meme_Logged = false;
     Meme_Remover = setInterval(() => {
       getVars();
+      var current_config = currentConfig();
+
       var view_node = null;
       var temp_enabled = enabled();
       if (Root) {
         view_node = Root.shadowRoot.getElementById("view");
         view_node = view_node.querySelector('hui-view');
         if (view_node) {
+
           if (temp_enabled) {
             view_node.style.background = 'transparent';
             View_Layout.style.background = 'transparent';
@@ -451,18 +441,24 @@ function processDefaultBackground() {
             }
             View_Layout.style.background = null;
             view_node.style.background = null;
+
+            if (current_config && current_config.reason) {
+              DEBUG_MESSAGE("Current config is disabled because " + current_config.reason, null, true);
+            }
           }
+          View_Loaded = true;
         }
         else {
           view_node = Root.shadowRoot.getElementById("view");
           view_node = view_node.querySelector("hui-panel-view");
           if (view_node) {
+
             if (temp_enabled) {
               view_node.style.background = 'transparent';
               View_Layout.style.background = 'transparent';
               if (!Meme_Logged) {
                 DEBUG_MESSAGE("Panel mode detected");
-                DEBUG_MESSAGE("Removing view background", currentConfig());
+                DEBUG_MESSAGE("Removing view background for configuration:", currentConfig());
                 Meme_Logged = true;
               }
             }
@@ -470,11 +466,15 @@ function processDefaultBackground() {
               if (!Meme_Logged) {
                 Meme_Logged = true;
               }
+              if (current_config && current_config.reason) {
+                DEBUG_MESSAGE("Current config is disabled because " + current_config.reason, null, true);
+              }
               View_Layout.style.background = null;
               if (view_node.style.background != "var(--lovelace-background)") {
                 view_node.style.background = "var(--lovelace-background)";
               }
             }
+            View_Loaded = true;
           }
         }
       }
@@ -484,15 +484,36 @@ function processDefaultBackground() {
         Meme_Remover = null;
         Meme_Count = 0;
       }
+
+      Loaded = true;
     }, 100);
   }
 }
 
 //main function
 function run() {
+  STATUS_MESSAGE("Starting", true);
+
   getVars();
 
-  STATUS_MESSAGE("Starting", true);
+  if (!Loaded) {
+    if (Animated_Config) {
+      if (Animated_Config.debug) {
+        Debug_Mode = Animated_Config.debug;
+        DEBUG_MESSAGE("Debug mode enabled");
+
+        if (Animated_Config.display_user_agent) {
+          if (Animated_Config.display_user_agent == true) {
+            alert(navigator.userAgent);
+          }
+        }
+      }
+      else {
+        Debug_Mode = false;
+      }
+    }
+  }
+
   //subscribe to hass object to detect state changes
   if (!Haobj) {
     document.querySelector("home-assistant").provideHass({
@@ -526,15 +547,6 @@ function run() {
     subtree: true,
     characterDataOldValue: true
   });
-
-  if (Animated_Config) {
-    if (enabled()) {
-      renderBackgroundHTML();
-    }
-  }
-  else {
-    STATUS_MESSAGE("No configuration found", true);
-  }
 }
 
 run();
