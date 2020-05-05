@@ -519,7 +519,18 @@ function run() {
     document.querySelector("home-assistant").provideHass({
       set hass(value) {
         Haobj = value;
-        renderBackgroundHTML();
+        var current_config = currentConfig();
+        if (Loaded) {
+          if (current_config.entity) {
+            var current_state = getEntityState(current_config.entity);
+            if (Previous_State != current_state) {
+              renderBackgroundHTML();
+            }
+          }
+        }
+        else {
+          renderBackgroundHTML();
+        }
       }
     });
   }
