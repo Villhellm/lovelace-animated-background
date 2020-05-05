@@ -404,6 +404,8 @@ function renderBackgroundHTML() {
       if (current_config.entity || (Previous_Url != state_url)) {
         if (!current_config.entity) {
           STATUS_MESSAGE("Applying default background", true);
+          Previous_Entity = null;
+          Previous_State = null;
         }
         bg.innerHTML = html_to_render;
         Previous_Url = state_url;
