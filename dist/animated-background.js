@@ -323,7 +323,7 @@ function processDefaultBackground() {
             }
           }
           else {
-            if(!meme_logged){
+            if (!meme_logged) {
               meme_logged = true;
             }
             viewLayout.style.background = null;
@@ -344,11 +344,14 @@ function processDefaultBackground() {
               }
             }
             else {
-              if(!meme_logged){
+              if (!meme_logged) {
                 meme_logged = true;
               }
               viewLayout.style.background = null;
-              viewNode.style.background = "var(--lovelace-background);";
+              if (viewNode.style.background != "var(--lovelace-background)") {
+                viewNode.style.background = "var(--lovelace-background)";
+
+              }
             }
           }
         }
@@ -435,7 +438,7 @@ function currentConfig() {
           if (current_url == "none") {
             var current_entity = return_config.entity;
             return_config = { enabled: false, reason: "current state('" + current_state + "') state_url is set to 'none'" };
-            if(previous_state != current_state){
+            if (previous_state != current_state) {
               STATUS_MESSAGE("Configured entity " + current_entity + " is now " + current_state, true);
               previous_state = current_state;
             }
