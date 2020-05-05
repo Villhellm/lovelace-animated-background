@@ -74,7 +74,6 @@ var viewObserver = new MutationObserver(function (mutations) {
       view_loaded = false;
       if (currentViewEnabled()) {
         renderBackgroundHTML();
-        removeDefaultBackground();
       }
     }
   });
@@ -304,7 +303,7 @@ function device_included(element, index, array) {
 var meme_remover = null;
 var meme_count = 0;
 var meme_logged = false;
-function removeDefaultBackground() {
+function processDefaultBackground() {
   if (!meme_remover) {
     meme_logged = false;
     meme_remover = setInterval(() => {
@@ -324,6 +323,9 @@ function removeDefaultBackground() {
             }
           }
           else {
+            if(!meme_logged){
+              meme_logged = true;
+            }
             viewLayout.style.background = null;
             viewNode.style.background = null;
           }
@@ -342,6 +344,9 @@ function removeDefaultBackground() {
               }
             }
             else {
+              if(!meme_logged){
+                meme_logged = true;
+              }
               viewLayout.style.background = null;
               viewNode.style.background = "var(--lovelace-background);";
             }
@@ -428,7 +433,12 @@ function currentConfig() {
         var current_url = return_config.state_url[current_state];
         if (current_url) {
           if (current_url == "none") {
+            var current_entity = return_config.entity;
             return_config = { enabled: false, reason: "current state('" + current_state + "') state_url is set to 'none'" };
+            if(previous_state != current_state){
+              STATUS_MESSAGE("Configured entity " + current_entity + " is now " + current_state, true);
+              previous_state = current_state;
+            }
           }
         }
       }
@@ -480,6 +490,7 @@ function getStateUrl(state) {
 
 //main render function
 function renderBackgroundHTML() {
+  processDefaultBackground();
   if (!enabled()) {
     return;
   }
@@ -496,6 +507,7 @@ function renderBackgroundHTML() {
   if (selectedConfig.entity) {
     var current_state = getEntityState(selectedConfig.entity);
     if (previous_state != current_state) {
+      view_loaded = false;
       STATUS_MESSAGE("Configured entity " + selectedConfig.entity + " is now " + current_state, true);
       if (selectedConfig.state_url[current_state]) {
         stateURL = selectedConfig.state_url[current_state];
@@ -542,12 +554,10 @@ function renderBackgroundHTML() {
     </div>`;
       viewLayout.insertAdjacentHTML("beforebegin", htmlToRender);
       previous_url = stateURL;
-      removeDefaultBackground();
     }
     else {
       htmlToRender = `<iframe class="bg-video" frameborder="0" src="${stateURL}"/>`;
       if (selectedConfig.entity || (previous_url != stateURL)) {
-        removeDefaultBackground();
         if (!selectedConfig.entity) {
           STATUS_MESSAGE("Applying default background", true);
         }
