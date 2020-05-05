@@ -323,7 +323,7 @@ function enabled() {
     }
     temp_enabled = false;
   }
-  if(current_config.enabled == true){
+  if (current_config.enabled == true) {
     temp_enabled = true;
   }
 
@@ -385,7 +385,7 @@ function renderBackgroundHTML() {
   }
 
   var html_to_render;
-  if (state_url != "") {
+  if (state_url != "" && Hui) {
     var bg = Hui.shadowRoot.getElementById("background-video");
     if (!bg) {
       if (!current_config.entity) {
