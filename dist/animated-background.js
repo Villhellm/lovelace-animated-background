@@ -277,10 +277,10 @@ function enabled() {
   }
 
   if (current_config.enabled == false) {
-    if(current_config.reason){
+    if (current_config.reason) {
       DEBUG_MESSAGE("Current config is disabled because " + current_config.reason, null, true);
     }
-    else{
+    else {
       DEBUG_MESSAGE("Current config is disabled", null, true);
     }
     temp_enabled = false;
@@ -361,8 +361,8 @@ function removeDefaultBackground() {
 
 function getGroupConfig(name) {
   var return_config = null;
-  if(name == "none"){
-    return {enabled: false, reason:"current group is set to 'none'" };
+  if (name == "none") {
+    return { enabled: false, reason: "current group is set to 'none'" };
   }
   if (animatedConfig.groups) {
     animatedConfig.groups.forEach(group => {
@@ -428,7 +428,7 @@ function currentConfig() {
         var current_url = return_config.state_url[current_state];
         if (current_url) {
           if (current_url == "none") {
-            return_config = { enabled: false, reason:"current state('" + current_state + "') state_url is set to 'none'" };
+            return_config = { enabled: false, reason: "current state('" + current_state + "') state_url is set to 'none'" };
           }
         }
       }
@@ -453,10 +453,10 @@ function currentViewEnabled() {
   return current_config != null;
 }
 
-function getEntityState(entity){
+function getEntityState(entity) {
   var return_state = null;
-  if(haobj){
-    if(haobj.states[entity]){
+  if (haobj) {
+    if (haobj.states[entity]) {
       return_state = haobj.states[entity].state;
     }
   }
@@ -464,12 +464,12 @@ function getEntityState(entity){
   return return_state;
 }
 
-function getStateUrl(state){
+function getStateUrl(state) {
   var return_url = null;
   var current_config = currentConfig();
-  if(current_config){
-    if(current_config.state_url){
-      if(current_config.state_url[state]){
+  if (current_config) {
+    if (current_config.state_url) {
+      if (current_config.state_url[state]) {
         return_url = current_config.state_url[state];
       }
     }
