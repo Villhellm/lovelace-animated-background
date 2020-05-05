@@ -34,7 +34,7 @@ animated_background:
     'sunny': /local/animated-background/background-animations/sunny.html
     'partlycloudy': /local/animated-background/background-animations/cloudy.html
     'cloudy': /local/animated-background/background-animations/cloudy.html
-    'mostlycloudy': /local/animated-background/background-animations/mostlycloudy.html
+    'mostlycloudy': none
     'clear-night': /local/animated-background/background-animations/night.html
     'fog': /local/animated-background/background-animations/fog.html
     'rainy': /local/animated-background/background-animations/rainy.html
@@ -68,7 +68,7 @@ animated_background:
     'sunny': /hacsfiles/lovelace-animated-background/background-animations/sunny.html
     'partlycloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
     'cloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
-    'mostlycloudy': /hacsfiles/lovelace-animated-background/background-animations/mostlycloudy.html
+    'mostlycloudy': none
     'clear-night': /hacsfiles/lovelace-animated-background/background-animations/night.html
     'fog': /hacsfiles/lovelace-animated-background/background-animations/fog.html
     'rainy': /hacsfiles/lovelace-animated-background/background-animations/rainy.html
@@ -92,7 +92,7 @@ Configuration for Animated Background goes into the root of your Lovelace config
 | views | list ([views](#view-configuration)) | **Optional** | Allows you to set custom configurations per view
 | groups | list ([group](#group-configuration)) | **Optional** | Allows you to set custom configurations that can be referenced in lovelace view configurations
 | entity | string | **Optional** | Entity to check for state changes
-| state_url | map | **Optional** | Map of states and urls. Required if `entity` is defined
+| state_url | map | **Optional** | Map of states and urls. Set to 'none' to disable background for the defined state (see example). Required if `entity` is defined
 | included_users | list (string) | **Optional** | List of users that will display animated background. If this option is set any users not included in this list will be excluded.
 | included_devices | list (string) | **Optional** | List of devices that will display animated background. If this option is set any devices not included in this list will be excluded. Ex:  iphone, ipad, windows, macintosh, android
 | excluded_users | list (string) | **Optional** | Users to be excluded
@@ -125,7 +125,7 @@ animated_background:
     'sunny': /hacsfiles/lovelace-animated-background/background-animations/sunny.html
     'partlycloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
     'cloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
-    'mostlycloudy': /hacsfiles/lovelace-animated-background/background-animations/mostlycloudy.html
+    'mostlycloudy': none
     'clear-night': /hacsfiles/lovelace-animated-background/background-animations/night.html
     'fog': /hacsfiles/lovelace-animated-background/background-animations/fog.html
     'rainy': /hacsfiles/lovelace-animated-background/background-animations/rainy.html
@@ -163,7 +163,7 @@ animated_background:
             'sunny': /hacsfiles/lovelace-animated-background/background-animations/sunny.html
             'partlycloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
             'cloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
-            'mostlycloudy': /hacsfiles/lovelace-animated-background/background-animations/mostlycloudy.html
+            'mostlycloudy': none
             'clear-night': /hacsfiles/lovelace-animated-background/background-animations/night.html
             'fog': /hacsfiles/lovelace-animated-background/background-animations/fog.html
             'rainy': /hacsfiles/lovelace-animated-background/background-animations/rainy.html
@@ -189,7 +189,7 @@ views:
 | default_url | string | **Optional** | If no matching state is found, this is the fallback url
 | enabled | bool | **Optional** | Set to false to disable Animated Background
 | entity | string | **Optional** | Entity to check for state changes
-| state_url | map | **Optional** | Map of states and urls. Required if `entity` is defined
+| state_url | map | **Optional** | Map of states and urls. Set to 'none' to disable background for the defined state (see example). Required if `entity` is defined
 | included_users | list (string) | **Optional** | List of users that will display animated background. If this option is set any users not included in this list will be excluded.
 | included_devices | list (string) | **Optional** | List of devices that will display animated background. If this option is set any devices not included in this list will be excluded. Ex:  iphone, ipad, windows, macintosh, android
 | excluded_users | list (string) | **Optional** | Users to be excluded

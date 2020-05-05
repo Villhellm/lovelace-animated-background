@@ -38,7 +38,7 @@ function DEBUG_MESSAGE(message, object, only_if_view_not_loaded) {
       return;
     }
     console.log(debug_prefix + message);
-    if (!isNullOrUndefined(object)) {
+    if (object) {
       console.log(object);
     }
   }
@@ -57,9 +57,9 @@ function get_vars() {
   root = root && root.shadowRoot;
   root = root && root.querySelector("hui-root");
   hui = root;
-  if (!isNullOrUndefined(root)) {
+  if (root) {
     lovelace = root.lovelace;
-    if (!isNullOrUndefined(lovelace)) {
+    if (lovelace) {
       animatedConfig = lovelace.config.animated_background;
     }
     viewLayout = root.shadowRoot.getElementById("layout");
@@ -97,7 +97,7 @@ var panelObserver = new MutationObserver(function (mutations) {
         var wait = 0;
         var wait_interval = setInterval(() => {
           get_vars()
-          if (!isNullOrUndefined(hui)) {
+          if (hui) {
             previous_entity = null;
             previous_state = null;
             previous_url = null;
@@ -118,7 +118,7 @@ function run() {
 
   STATUS_MESSAGE("Starting", true);
   //subscribe to hass object to detect state changes
-  if (isNullOrUndefined(haobj)) {
+  if (!haobj) {
     document.querySelector("home-assistant").provideHass({
       set hass(value) {
         haobj = value;
@@ -151,13 +151,9 @@ function run() {
     characterDataOldValue: true
   });
 
-  if (!isNullOrUndefined(animatedConfig)) {
+  if (animatedConfig) {
     if (enabled()) {
       renderBackgroundHTML();
-    }
-    else {
-      STATUS_MESSAGE("Current environment is not enabled in Lovelace configuration");
-      DEBUG_MESSAGE("Not loaded, this is the currently found configuration", currentConfig());
     }
   }
   else {
@@ -170,36 +166,20 @@ function currentViewPath() {
   return window.location.pathname.split('/')[2];
 }
 
-//bool returns whether current configuration exists in animated_config (different from enabled in that no haobj is required and is more flexible)
-
-//generic null/undefined/empty helper function
-function isNullOrUndefined(obj) {
-  if (obj == null) {
-    return true;
-  }
-  if (obj == undefined) {
-    return true;
-  }
-  if (obj == "") {
-    return true;
-  }
-  return false;
-}
-
 //logic for checking if enabled in configuration
 function enabled() {
   var temp_configured = false;
-  if (!isNullOrUndefined(animatedConfig)) {
-    if (!isNullOrUndefined(animatedConfig.default_url) || !isNullOrUndefined(animatedConfig.entity) || !isNullOrUndefined(animatedConfig.views) || !isNullOrUndefined(animatedConfig.groups)) {
+  if (animatedConfig) {
+    if (animatedConfig.default_url || animatedConfig.entity || animatedConfig.views || animatedConfig.groups) {
       temp_configured = true;
     }
 
-    if (!isNullOrUndefined(animatedConfig.debug)) {
+    if (animatedConfig.debug) {
       if (!loaded) {
         debug_mode = animatedConfig.debug;
         DEBUG_MESSAGE("Debug mode enabled");
 
-        if (!isNullOrUndefined(animatedConfig.display_user_agent)) {
+        if (animatedConfig.display_user_agent) {
           if (animatedConfig.display_user_agent == true) {
             alert(navigator.userAgent);
           }
@@ -221,43 +201,43 @@ function enabled() {
 
   var current_config = currentConfig();
 
-  if (isNullOrUndefined(haobj)) {
+  if (!haobj) {
     return false;
   }
 
   var temp_enabled = true;
 
-  if (isNullOrUndefined(current_config)) {
+  if (!current_config) {
     return false;
   }
 
-  if (!isNullOrUndefined(animatedConfig.excluded_devices)) {
+  if (animatedConfig.excluded_devices) {
     if (animatedConfig.excluded_devices.some(device_included)) {
       DEBUG_MESSAGE("Current device is excluded", null, true);
       temp_enabled = false;
     }
   }
-  if (!isNullOrUndefined(current_config.excluded_devices)) {
+  if (current_config.excluded_devices) {
     if (current_config.excluded_devices.some(device_included)) {
       DEBUG_MESSAGE("Current device is excluded", null, true);
       temp_enabled = false;
     }
   }
 
-  if (!isNullOrUndefined(animatedConfig.excluded_users)) {
+  if (animatedConfig.excluded_users) {
     if (animatedConfig.excluded_users.map(username => username.toLowerCase()).includes(haobj.user.name.toLowerCase())) {
       DEBUG_MESSAGE("Current user: " + haobj.user.name + " is excluded", null, true);
       temp_enabled = false;
     }
   }
-  if (!isNullOrUndefined(current_config.excluded_users)) {
+  if (current_config.excluded_users) {
     if (current_config.excluded_users.map(username => username.toLowerCase()).includes(haobj.user.name.toLowerCase())) {
       DEBUG_MESSAGE("Current user: " + haobj.user.name + " is excluded", null, true);
       temp_enabled = false;
     }
   }
 
-  if (!isNullOrUndefined(animatedConfig.included_users)) {
+  if (animatedConfig.included_users) {
     if (animatedConfig.included_users.map(username => username.toLowerCase()).includes(haobj.user.name.toLowerCase())) {
       temp_enabled = true;
     }
@@ -266,7 +246,7 @@ function enabled() {
       temp_enabled = false;
     }
   }
-  if (!isNullOrUndefined(current_config.included_users)) {
+  if (current_config.included_users) {
     if (current_config.included_users.map(username => username.toLowerCase()).includes(haobj.user.name.toLowerCase())) {
       temp_enabled = true;
     }
@@ -276,7 +256,7 @@ function enabled() {
     }
   }
 
-  if (!isNullOrUndefined(animatedConfig.included_devices)) {
+  if (animatedConfig.included_devices) {
     if (animatedConfig.included_devices.some(device_included)) {
       temp_enabled = true;
     }
@@ -286,7 +266,7 @@ function enabled() {
     }
   }
 
-  if (!isNullOrUndefined(current_config.included_devices)) {
+  if (current_config.included_devices) {
     if (current_config.included_devices.some(device_included)) {
       temp_enabled = true;
     }
@@ -296,14 +276,17 @@ function enabled() {
     }
   }
 
-  if (!isNullOrUndefined(current_config.enabled)) {
-    if (current_config.enabled == false) {
+  if (current_config.enabled == false) {
+    if(current_config.reason){
+      DEBUG_MESSAGE("Current config is disabled because " + current_config.reason, null, true);
+    }
+    else{
       DEBUG_MESSAGE("Current config is disabled", null, true);
-      temp_enabled = false;
     }
-    else {
-      temp_enabled = true;
-    }
+    temp_enabled = false;
+  }
+  else {
+    temp_enabled = true;
   }
 
   loaded = true;
@@ -322,21 +305,21 @@ var meme_remover = null;
 var meme_count = 0;
 var meme_logged = false;
 function removeDefaultBackground() {
-  if (isNullOrUndefined(meme_remover)) {
+  if (!meme_remover) {
     meme_logged = false;
     meme_remover = setInterval(() => {
       get_vars();
       var viewNode = null;
       var temp_enabled = enabled();
-      if (!isNullOrUndefined(root)) {
+      if (root) {
         viewNode = root.shadowRoot.getElementById("view");
         viewNode = viewNode.querySelector('hui-view');
-        if (!isNullOrUndefined(viewNode)) {
+        if (viewNode) {
           if (temp_enabled) {
             viewNode.style.background = 'transparent';
             viewLayout.style.background = 'transparent';
             if (!meme_logged) {
-              DEBUG_MESSAGE("Removing view background", currentConfig());
+              DEBUG_MESSAGE("Removing view background for configuration:", currentConfig());
               meme_logged = true;
             }
           }
@@ -348,7 +331,7 @@ function removeDefaultBackground() {
         else {
           viewNode = root.shadowRoot.getElementById("view");
           viewNode = viewNode.querySelector("hui-panel-view");
-          if (!isNullOrUndefined(viewNode)) {
+          if (viewNode) {
             if (temp_enabled) {
               viewNode.style.background = 'transparent';
               viewLayout.style.background = 'transparent';
@@ -379,13 +362,13 @@ function removeDefaultBackground() {
 function getGroupConfig(name) {
   var return_config = null;
   if(name == "none"){
-    return {enabled: false };
+    return {enabled: false, reason:"current group is set to 'none'" };
   }
-  if (!isNullOrUndefined(animatedConfig.groups)) {
+  if (animatedConfig.groups) {
     animatedConfig.groups.forEach(group => {
-      if (!isNullOrUndefined(group.name)) {
+      if (group.name) {
         if (group.name == name) {
-          if (!isNullOrUndefined(group.config)) {
+          if (group.config) {
             return_config = group.config;
           }
         }
@@ -399,15 +382,15 @@ function getGroupConfig(name) {
 function currentConfig() {
   var current_view_path = currentViewPath();
   var return_config = null;
-  if (!isNullOrUndefined(animatedConfig)) {
-    if (!isNullOrUndefined(animatedConfig.entity) || !isNullOrUndefined(animatedConfig.default_url)) {
+  if (animatedConfig) {
+    if (animatedConfig.entity || animatedConfig.default_url) {
       return_config = animatedConfig;
     }
 
-    if (!isNullOrUndefined(animatedConfig.views)) {
+    if (animatedConfig.views) {
       animatedConfig.views.forEach(view => {
         if (view.path == current_view_path) {
-          if (!isNullOrUndefined(view.config)) {
+          if (view.config) {
             return_config = view.config;
           }
           else {
@@ -419,7 +402,7 @@ function currentConfig() {
 
     var current_view_path = currentViewPath();
     var current_view_config = lovelace.config.views[lovelace.current_view];
-    if (!isNullOrUndefined(lovelace) && !isNullOrUndefined(current_view_path)) {
+    if (lovelace && current_view_path) {
       for (var i = 0; lovelace.config.views.length > i; i++) {
         if (lovelace.config.views[i].path == current_view_path) {
           current_view_config = lovelace.config.views[i];
@@ -431,12 +414,25 @@ function currentConfig() {
         }
       }
 
-      if (!isNullOrUndefined(current_view_config)) {
+      if (current_view_config) {
         var potential_config = getGroupConfig(current_view_config.animated_background);
-        if (!isNullOrUndefined(potential_config)) {
+        if (potential_config) {
           return_config = potential_config;
         }
       }
+    }
+
+    if (return_config) {
+      if (return_config.entity) {
+        var current_state = getEntityState(return_config.entity);
+        var current_url = return_config.state_url[current_state];
+        if (current_url) {
+          if (current_url == "none") {
+            return_config = { enabled: false, reason:"current state('" + current_state + "') state_url is set to 'none'" };
+          }
+        }
+      }
+
     }
   }
   return return_config;
@@ -445,7 +441,7 @@ function currentConfig() {
 //bool whether currentConfig returns a non-null value
 function currentViewEnabled() {
   var current_config = currentConfig();
-  if (isNullOrUndefined(current_config)) {
+  if (!current_config) {
     DEBUG_MESSAGE("View switched, no configuration found");
     return false;
   }
@@ -454,7 +450,32 @@ function currentViewEnabled() {
       //DEBUG_MESSAGE("View switched, current view is disabled", current_config);
     }
   }
-  return !isNullOrUndefined(current_config);
+  return current_config != null;
+}
+
+function getEntityState(entity){
+  var return_state = null;
+  if(haobj){
+    if(haobj.states[entity]){
+      return_state = haobj.states[entity].state;
+    }
+  }
+
+  return return_state;
+}
+
+function getStateUrl(state){
+  var return_url = null;
+  var current_config = currentConfig();
+  if(current_config){
+    if(current_config.state_url){
+      if(current_config.state_url[state]){
+        return_url = current_config.state_url[state];
+      }
+    }
+  }
+
+  return return_url;
 }
 
 //main render function
@@ -472,8 +493,8 @@ function renderBackgroundHTML() {
   }
 
   //get state of config object 
-  if (!isNullOrUndefined(selectedConfig.entity)) {
-    var current_state = haobj.states[selectedConfig.entity].state;
+  if (selectedConfig.entity) {
+    var current_state = getEntityState(selectedConfig.entity);
     if (previous_state != current_state) {
       STATUS_MESSAGE("Configured entity " + selectedConfig.entity + " is now " + current_state, true);
       if (selectedConfig.state_url[current_state]) {
@@ -497,7 +518,7 @@ function renderBackgroundHTML() {
   var htmlToRender;
   if (stateURL != "") {
     var bg = hui.shadowRoot.getElementById("background-video");
-    if (isNullOrUndefined(bg)) {
+    if (!bg) {
       if (!selectedConfig.entity) {
         STATUS_MESSAGE("Applying default background", true);
       }
