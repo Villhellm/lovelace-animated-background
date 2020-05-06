@@ -4,7 +4,7 @@ const Log_Prefix = "Animated Background: "
 
 //globals
 var Root;
-var Panel_Resolver;
+var Panel_Holder;
 var Hui;
 var Lovelace;
 var Animated_Config;
@@ -16,7 +16,6 @@ var Loaded = false;
 var View_Loaded = false;
 var Meme_Remover = null;
 var Meme_Count = 0;
-var Meme_Logged = false;
 
 //state tracking variables
 let Previous_State;
@@ -53,9 +52,11 @@ function getVars() {
   Root = Root && Root.querySelector("home-assistant-main");
   Root = Root && Root.shadowRoot;
   Root = Root && Root.querySelector("app-drawer-layout partial-panel-resolver");
-  Panel_Resolver = Root;
   Root = (Root && Root.shadowRoot) || Root;
   Root = Root && Root.querySelector("ha-panel-lovelace");
+  if (Root) {
+    Panel_Holder = Root.shadowRoot;
+  }
   Root = Root && Root.shadowRoot;
   Root = Root && Root.querySelector("hui-root");
   Hui = Root;
@@ -93,24 +94,15 @@ var Hui_Observer = new MutationObserver(function (mutations) {
 });
 
 //Mutation observer to reload on dashboard change
-// var Panel_Observer = new MutationObserver(function (mutations) {
-//   mutations.forEach(function (mutation) {
-//     if (mutation.addedNodes.length > 0) {
-//       if (mutation.addedNodes[0].nodeName.toLowerCase() == "ha-panel-lovelace") {
-//         var wait_interval = setInterval(() => {
-//           getVars()
-//           if (Hui) {
-//             Previous_Entity = null;
-//             Previous_State = null;
-//             Loaded = false;
-//             run();
-//             clearInterval(wait_interval);
-//           }
-//         }, 1000 / 60);
-//       }
-//     }
-//   });
-// });
+var Panel_Observer = new MutationObserver(function (mutations) {
+  mutations.forEach(function (mutation) {
+    if (mutation.removedNodes.length > 0) {
+      if (mutation.removedNodes[0].nodeName.toLowerCase() == "hui-editor") {
+        restart();
+      }
+    }
+  });
+});
 
 //Current known support: iphone, ipad (if set to mobile site option), windows, macintosh, android
 function deviceIncluded(element, index, array) {
@@ -424,73 +416,51 @@ function renderBackgroundHTML() {
   }
 }
 
+//removes lovelace theme background
+function removeDefaultBackground(node) {
+  if (node.style.background != 'transparent' || View_Layout.style.background != 'transparent') {
+    node.style.background = 'transparent';
+    View_Layout.style.background = 'transparent';
+  }
+}
+
+//restores lovelace theme background
+function restoreDefaultBackground(node) {
+  View_Layout.style.background = null;
+  node.style.background = null;
+}
+
 //remove background every 100 milliseconds for 2 seconds because race condition memes
 function processDefaultBackground() {
   if (!Meme_Remover) {
-    Meme_Logged = false;
     Meme_Remover = setInterval(() => {
       getVars();
       var current_config = currentConfig();
 
+      var view_holder;
       var view_node = null;
+      var view_node_panel = null;
       var temp_enabled = enabled();
       if (Root) {
-        view_node = Root.shadowRoot.getElementById("view");
-        view_node = view_node.querySelector('hui-view');
-        if (view_node) {
+        view_holder = Root.shadowRoot.getElementById("view");
 
+        if (view_holder) {
+          view_node_panel = view_holder.querySelector("hui-panel-view")
+          view_node = view_holder.querySelector('hui-view');
+        }
+
+        if (view_node || view_node_panel) {
           if (temp_enabled) {
-            if (view_node.style.background != 'transparent') {
-              view_node.style.background = 'transparent';
-              View_Layout.style.background = 'transparent';
-              if (!Meme_Logged) {
-                DEBUG_MESSAGE("Removing view background for configuration:", currentConfig());
-                Meme_Logged = true;
-              }
-            }
+            removeDefaultBackground(view_node ?? view_node_panel);
+            DEBUG_MESSAGE("Removing view background for configuration:", currentConfig(), true);
           }
           else {
-            if (!Meme_Logged) {
-              Meme_Logged = true;
-            }
-            View_Layout.style.background = null;
-            view_node.style.background = null;
-
+            restoreDefaultBackground(view_node ?? view_node_panel);
             if (current_config && current_config.reason) {
               DEBUG_MESSAGE("Current config is disabled because " + current_config.reason, null, true);
             }
           }
           View_Loaded = true;
-        }
-        else {
-          view_node = Root.shadowRoot.getElementById("view");
-          view_node = view_node.querySelector("hui-panel-view");
-          if (view_node) {
-            if (temp_enabled) {
-              if (view_node.style.background != 'transparent') {
-                view_node.style.background = 'transparent';
-                View_Layout.style.background = 'transparent';
-                if (!Meme_Logged) {
-                  DEBUG_MESSAGE("Panel mode detected");
-                  DEBUG_MESSAGE("Removing view background for configuration:", currentConfig());
-                  Meme_Logged = true;
-                }
-              }
-            }
-            else {
-              if (!Meme_Logged) {
-                Meme_Logged = true;
-              }
-              if (current_config && current_config.reason) {
-                DEBUG_MESSAGE("Current config is disabled because " + current_config.reason, null, true);
-              }
-              View_Layout.style.background = null;
-              if (view_node.style.background != "var(--lovelace-background)") {
-                view_node.style.background = "var(--lovelace-background)";
-              }
-            }
-            View_Loaded = true;
-          }
         }
       }
       Meme_Count++;
@@ -544,18 +514,7 @@ function run() {
     document.querySelector("home-assistant").provideHass({
       set hass(value) {
         if (Haobj && Haobj.panelUrl != value.panelUrl) {
-          var wait_interval = setInterval(() => {
-            getVars()
-            if (Hui) {
-              Previous_Entity = null;
-              Previous_State = null;
-              Loaded = false;
-              View_Loaded = false;
-              View_Observer.disconnect();
-              run();
-              clearInterval(wait_interval);
-            }
-          }, 1000 / 60);
+          restart();
         }
         Haobj = value;
         var current_config = currentConfig();
@@ -595,13 +554,28 @@ function run() {
     characterDataOldValue: true
   });
 
-  // Panel_Observer.disconnect();
-  // Panel_Observer.observe(Panel_Resolver, {
-  //   characterData: true,
-  //   childList: true,
-  //   subtree: true,
-  //   characterDataOldValue: true
-  // });
+  Panel_Observer.disconnect();
+  Panel_Observer.observe(Panel_Holder, {
+    characterData: true,
+    childList: true,
+    subtree: true,
+    characterDataOldValue: true
+  });
+}
+
+function restart() {
+  var wait_interval = setInterval(() => {
+    getVars()
+    if (Hui) {
+      Previous_Entity = null;
+      Previous_State = null;
+      Loaded = false;
+      View_Loaded = false;
+      View_Observer.disconnect();
+      run();
+      clearInterval(wait_interval);
+    }
+  }, 200);
 }
 
 run();
