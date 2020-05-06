@@ -83,6 +83,7 @@ var View_Observer = new MutationObserver(function (mutations) {
 var Hui_Observer = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.addedNodes.length > 0) {
+      DEBUG_MESSAGE("Proof that this observer is not useless");
       renderBackgroundHTML();
     }
   });
