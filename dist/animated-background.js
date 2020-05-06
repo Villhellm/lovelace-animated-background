@@ -78,6 +78,7 @@ var View_Observer = new MutationObserver(function (mutations) {
         DEBUG_MESSAGE("No configuration found for this view");
       }
       View_Loaded = false;
+      clearMemes();
       renderBackgroundHTML();
     }
   });
@@ -371,8 +372,12 @@ function renderBackgroundHTML() {
     }
   }
 
-  processDefaultBackground();
+  var temp_enabled = enabled();
+  processDefaultBackground(temp_enabled);
 
+  if(!temp_enabled){
+    return;
+  }
   var html_to_render;
   if (state_url != "" && Hui) {
     var bg = Hui.shadowRoot.getElementById("background-video");
@@ -431,7 +436,7 @@ function restoreDefaultBackground(node) {
 }
 
 //remove background every 100 milliseconds for 2 seconds because race condition memes
-function processDefaultBackground() {
+function processDefaultBackground(temp_enabled) {
   if (!Meme_Remover) {
     Meme_Remover = setInterval(() => {
       getVars();
@@ -440,7 +445,7 @@ function processDefaultBackground() {
       var view_holder;
       var view_node = null;
       var view_node_panel = null;
-      var temp_enabled = enabled();
+
       if (Root) {
         view_holder = Root.shadowRoot.getElementById("view");
 
@@ -465,14 +470,18 @@ function processDefaultBackground() {
       }
       Meme_Count++;
       if (Meme_Count > 20) {
-        clearInterval(Meme_Remover);
-        Meme_Remover = null;
+        clearMemes();
         Meme_Count = 0;
       }
 
       Loaded = true;
     }, 100);
   }
+}
+
+function clearMemes(){
+  clearInterval(Meme_Remover);
+  Meme_Remover = null;
 }
 
 function setDebugMode() {
@@ -522,6 +531,7 @@ function run() {
           if (current_config && current_config.entity) {
             var current_state = getEntityState(current_config.entity);
             if (Previous_State != current_state) {
+              clearMemes();
               renderBackgroundHTML();
             }
           }
@@ -571,6 +581,7 @@ function restart() {
       Previous_State = null;
       Loaded = false;
       View_Loaded = false;
+      clearMemes();
       View_Observer.disconnect();
       run();
       clearInterval(wait_interval);
