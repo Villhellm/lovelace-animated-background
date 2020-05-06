@@ -440,11 +440,13 @@ function processDefaultBackground() {
         if (view_node) {
 
           if (temp_enabled) {
-            view_node.style.background = 'transparent';
-            View_Layout.style.background = 'transparent';
-            if (!Meme_Logged) {
-              DEBUG_MESSAGE("Removing view background for configuration:", currentConfig());
-              Meme_Logged = true;
+            if (view_node.style.background != 'transparent') {
+              view_node.style.background = 'transparent';
+              View_Layout.style.background = 'transparent';
+              if (!Meme_Logged) {
+                DEBUG_MESSAGE("Removing view background for configuration:", currentConfig());
+                Meme_Logged = true;
+              }
             }
           }
           else {
@@ -464,14 +466,15 @@ function processDefaultBackground() {
           view_node = Root.shadowRoot.getElementById("view");
           view_node = view_node.querySelector("hui-panel-view");
           if (view_node) {
-
             if (temp_enabled) {
-              view_node.style.background = 'transparent';
-              View_Layout.style.background = 'transparent';
-              if (!Meme_Logged) {
-                DEBUG_MESSAGE("Panel mode detected");
-                DEBUG_MESSAGE("Removing view background for configuration:", currentConfig());
-                Meme_Logged = true;
+              if (view_node.style.background != 'transparent') {
+                view_node.style.background = 'transparent';
+                View_Layout.style.background = 'transparent';
+                if (!Meme_Logged) {
+                  DEBUG_MESSAGE("Panel mode detected");
+                  DEBUG_MESSAGE("Removing view background for configuration:", currentConfig());
+                  Meme_Logged = true;
+                }
               }
             }
             else {
