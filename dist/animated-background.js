@@ -90,25 +90,24 @@ var Hui_Observer = new MutationObserver(function (mutations) {
 });
 
 //Mutation observer to reload on dashboard change
-var Panel_Observer = new MutationObserver(function (mutations) {
-  mutations.forEach(function (mutation) {
-    if (mutation.addedNodes.length > 0) {
-      if (mutation.addedNodes[0].nodeName.toLowerCase() == "ha-panel-lovelace") {
-        var wait_interval = setInterval(() => {
-          getVars()
-          if (Hui) {
-            Previous_Entity = null;
-            Previous_State = null;
-            Previous_Url = null;
-            Loaded = false;
-            run();
-            clearInterval(wait_interval);
-          }
-        }, 1000 / 60);
-      }
-    }
-  });
-});
+// var Panel_Observer = new MutationObserver(function (mutations) {
+//   mutations.forEach(function (mutation) {
+//     if (mutation.addedNodes.length > 0) {
+//       if (mutation.addedNodes[0].nodeName.toLowerCase() == "ha-panel-lovelace") {
+//         var wait_interval = setInterval(() => {
+//           getVars()
+//           if (Hui) {
+//             Previous_Entity = null;
+//             Previous_State = null;
+//             Loaded = false;
+//             run();
+//             clearInterval(wait_interval);
+//           }
+//         }, 1000 / 60);
+//       }
+//     }
+//   });
+// });
 
 //Current known support: iphone, ipad (if set to mobile site option), windows, macintosh, android
 function deviceIncluded(element, index, array) {
@@ -144,6 +143,9 @@ function getGroupConfig(name) {
 function currentConfig() {
   var current_view_path = currentViewPath();
   var return_config = null;
+  if(current_view_path == undefined){
+    return return_config;
+  }
   if (Animated_Config) {
     if (Animated_Config.entity || Animated_Config.default_url) {
       return_config = Animated_Config;
@@ -226,16 +228,9 @@ function enabled() {
     return false;
   }
 
+  //Root configuration exceptions
   if (Animated_Config.excluded_devices) {
     if (Animated_Config.excluded_devices.some(deviceIncluded)) {
-      if (temp_enabled) {
-        DEBUG_MESSAGE("Current device is excluded", null, true);
-        temp_enabled = false;
-      }
-    }
-  }
-  if (current_config.excluded_devices) {
-    if (current_config.excluded_devices.some(deviceIncluded)) {
       if (temp_enabled) {
         DEBUG_MESSAGE("Current device is excluded", null, true);
         temp_enabled = false;
@@ -245,14 +240,6 @@ function enabled() {
 
   if (Animated_Config.excluded_users) {
     if (Animated_Config.excluded_users.map(username => username.toLowerCase()).includes(Haobj.user.name.toLowerCase())) {
-      if (temp_enabled) {
-        DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is excluded", null, true);
-        temp_enabled = false;
-      }
-    }
-  }
-  if (current_config.excluded_users) {
-    if (current_config.excluded_users.map(username => username.toLowerCase()).includes(Haobj.user.name.toLowerCase())) {
       if (temp_enabled) {
         DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is excluded", null, true);
         temp_enabled = false;
@@ -271,17 +258,6 @@ function enabled() {
       }
     }
   }
-  if (current_config.included_users) {
-    if (current_config.included_users.map(username => username.toLowerCase()).includes(Haobj.user.name.toLowerCase())) {
-      temp_enabled = true;
-    }
-    else {
-      if (temp_enabled) {
-        DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is not included", null, true);
-        temp_enabled = false;
-      }
-    }
-  }
 
   if (Animated_Config.included_devices) {
     if (Animated_Config.included_devices.some(deviceIncluded)) {
@@ -290,6 +266,37 @@ function enabled() {
     else {
       if (temp_enabled) {
         DEBUG_MESSAGE("Current device is not included", null, true);
+        temp_enabled = false;
+      }
+    }
+  }
+
+  //Current config overrides (only does anything if curre_config and Animated_Config are different)
+  if (current_config.excluded_devices) {
+    if (current_config.excluded_devices.some(deviceIncluded)) {
+      if (temp_enabled) {
+        DEBUG_MESSAGE("Current device is excluded", null, true);
+        temp_enabled = false;
+      }
+    }
+  }
+
+  if (current_config.excluded_users) {
+    if (current_config.excluded_users.map(username => username.toLowerCase()).includes(Haobj.user.name.toLowerCase())) {
+      if (temp_enabled) {
+        DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is excluded", null, true);
+        temp_enabled = false;
+      }
+    }
+  }
+
+  if (current_config.included_users) {
+    if (current_config.included_users.map(username => username.toLowerCase()).includes(Haobj.user.name.toLowerCase())) {
+      temp_enabled = true;
+    }
+    else {
+      if (temp_enabled) {
+        DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is not included", null, true);
         temp_enabled = false;
       }
     }
@@ -335,7 +342,9 @@ function renderBackgroundHTML() {
   var state_url = "";
 
   if (!current_config) {
-    DEBUG_MESSAGE("No configuration found for this view");
+    if(Animated_Config){
+      DEBUG_MESSAGE("No configuration found for this view");
+    }
     return;
   }
 
@@ -515,27 +524,48 @@ function run() {
         Debug_Mode = false;
       }
     }
+    else{
+      STATUS_MESSAGE("No configuration found for this dashboard");
+    }
   }
 
   //subscribe to hass object to detect state changes
   if (!Haobj) {
     document.querySelector("home-assistant").provideHass({
       set hass(value) {
+        if(Haobj && Haobj.panelUrl != value.panelUrl){
+          var wait_interval = setInterval(() => {
+            getVars()
+            if (Hui) {
+              Previous_Entity = null;
+              Previous_State = null;
+              Loaded = false;
+              run();
+              clearInterval(wait_interval);
+            }
+          }, 1000 / 60);
+        }
         Haobj = value;
         var current_config = currentConfig();
         if (Loaded) {
-          if (current_config.entity) {
+          if (current_config && current_config.entity) {
             var current_state = getEntityState(current_config.entity);
             if (Previous_State != current_state) {
               renderBackgroundHTML();
             }
           }
+
         }
         else {
           renderBackgroundHTML();
         }
       }
     });
+  }
+  else{
+    if(!Loaded){
+      renderBackgroundHTML();
+    }
   }
 
   View_Observer.disconnect();
@@ -554,13 +584,13 @@ function run() {
     characterDataOldValue: true
   });
 
-  Panel_Observer.disconnect();
-  Panel_Observer.observe(Panel_Resolver, {
-    characterData: true,
-    childList: true,
-    subtree: true,
-    characterDataOldValue: true
-  });
+  // Panel_Observer.disconnect();
+  // Panel_Observer.observe(Panel_Resolver, {
+  //   characterData: true,
+  //   childList: true,
+  //   subtree: true,
+  //   characterDataOldValue: true
+  // });
 }
 
 run();
