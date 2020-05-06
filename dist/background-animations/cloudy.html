@@ -36,9 +36,20 @@
     <source src="" type="video/mp4">
   </video>
   <script>
-    function randomIntFromInterval(min, max) { // min and max included 
-      return Math.floor(Math.random() * (max - min + 1) + min);
+    function randomIntFromInterval(min, max) { // min and max included
+      var return_int = Math.floor(Math.random() * (max - min + 1) + min);
+      if(window.location.search){
+        var search = new URLSearchParams(window.location.search);
+        var video = search.get("video");
+        if(!isNaN(video)){
+          if(video < cinemagraphs.length && video >=0){
+            return_int = video;
+          }
+        }
+      }
+      return return_int;
     }
+    
     var cinemagraphs = [
       "https://cdn.flixel.com/flixel/13e0s6coh6ayapvdyqnv.hd.mp4",
       "https://cdn.flixel.com/flixel/aorl3skmssy7udwopk22.hd.mp4",
