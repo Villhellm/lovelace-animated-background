@@ -197,9 +197,20 @@ If you would like to use your own video file, go into the desired HTML file and 
 Ex:
 ```html
   <script>
-    function randomIntFromInterval(min, max) {
-      return Math.floor(Math.random() * (max - min + 1) + min);
+    function randomIntFromInterval(min, max) { // min and max included
+      var return_int = Math.floor(Math.random() * (max - min + 1) + min);
+      if(window.location.search){
+        var search = new URLSearchParams(window.location.search);
+        var video = search.get("video");
+        if(!isNaN(video)){
+          if(video < cinemagraphs.length && video >=0){
+            return_int = video;
+          }
+        }
+      }
+      return return_int;
     }
+
     var cinemagraphs = [
       "https://cdn.flixel.com/flixel/x9dr8caygivq5secll7i.hd.mp4", //remove or change this line
       "https://cdn.flixel.com/flixel/v26zyfd6yf0r33s46vpe.hd.mp4", //remove or change this line
@@ -209,6 +220,15 @@ Ex:
     document.getElementById("cinemagraph").setAttribute("src", cinemagraphs[randomIntFromInterval(0, cinemagraphs.length - 1)]); 
   </script>
  ```
+
+Bonus tip: If you have multiple videos defined but you have a view that you only want a single video to display, you can do so by adding a `?video=index` parameter  at the end of your config url where `index` is whatever video index you want to use, from 0 to the number of cinemagraph urls minus 1.
+
+Ex:
+```yaml
+animated_background:
+  default_url: /hacsfiles/lovelace-animated-background/background-animations/night.html?video=1
+  #This will display only the second video in the cinemagraphs array (remember arrays start at 0)
+```
 
 
 [Troubleshooting](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins)
