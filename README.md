@@ -17,13 +17,13 @@ Install `animated-background` by copying `animated-background.js` from this repo
 
 ### Step 2
 
+Add the resource to your configuration. If you are in yaml mode follow [the lovelace docs](https://www.home-assistant.io/lovelace/dashboards-and-views/#resources). If you are using the UI to manage resources then go you `<your-ha-address>/config/lovelace/resources` and add the URL `/local/animated-background.js` as a javascript module. 
+
+### Step 3
+
 Add the custom element in the root of your `ui-lovelace.yaml` (or Lovelace raw configuration if not in yaml mode), not in a view or card.
 Ex:
 ```yaml
-#IF YOU ARE USING HA VERSION 0.108+ THEN YOUR RESOURCES WILL BE CONFIGURED ELSEWHERE
-resources:
-  - url: /local/animated-background.js
-    type: module
 animated_background:
   default_url: /local/animated-background/background-animations/sunny.html
   included_users:
@@ -51,13 +51,13 @@ Make sure you have [HACS](https://github.com/custom-components/hacs) installed, 
 
 ### Step 2
 
+Add the resource to your configuration. If you are in yaml mode follow [the lovelace docs](https://www.home-assistant.io/lovelace/dashboards-and-views/#resources) and add the URL `/hacsfiles/lovelace-animated-background/animated-background.js` as a module. If you are using the UI to manage resources then click the button at the top of the Animated Background HACS page to automatically add it to your resources.
+
+### Step 3
+
 Add the custom element in the root of your `ui-lovelace.yaml` (or Lovelace raw configuration if not in yaml mode), not in a view or card.
 Ex:
 ```yaml
-#IF YOU ARE USING HA VERSION 0.108+ THEN YOUR RESOURCES WILL BE CONFIGURED ELSEWHERE
-resources:
-  - url: /hacsfiles/lovelace-animated-background/animated-background.js
-    type: module
 animated_background:
   default_url: /hacsfiles/lovelace-animated-background/background-animations/sunny.html
   included_users:
@@ -111,10 +111,6 @@ Also note that if you make any changes to the included HTML files, i.e. insertin
 
 Ex:
 ```yaml
-#IF YOU ARE USING HA VERSION 0.108+ THEN YOUR RESOURCES WILL BE CONFIGURED ELSEWHERE
-resources:
-  - url: /hacsfiles/lovelace-animated-background/animated-background.js
-    type: module
 animated_background:
   default_url: /hacsfiles/lovelace-animated-background/background-animations/sunny.html
   included_users:
