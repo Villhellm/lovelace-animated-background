@@ -73,7 +73,7 @@ function getVars() {
 var View_Observer = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.addedNodes.length > 0) {
-      if(!currentConfig()){
+      if (!currentConfig() && View_Loaded) {
         DEBUG_MESSAGE("No configuration found for this view");
       }
       View_Loaded = false;
@@ -146,7 +146,7 @@ function getGroupConfig(name) {
 function currentConfig() {
   var current_view_path = currentViewPath();
   var return_config = null;
-  if(current_view_path == undefined){
+  if (current_view_path == undefined) {
     return return_config;
   }
   if (Animated_Config) {
@@ -502,32 +502,36 @@ function processDefaultBackground() {
   }
 }
 
-//main function
-function run() {
-  STATUS_MESSAGE("Starting", true);
-
-  getVars();
-
-  if (!Loaded) {
-    if (Animated_Config) {
-      if (Animated_Config.debug) {
-        Debug_Mode = Animated_Config.debug;
-        DEBUG_MESSAGE("Debug mode enabled");
-
-        if (Animated_Config.display_user_agent) {
-          if (Animated_Config.display_user_agent == true) {
-            alert(navigator.userAgent);
-          }
+function setDebugMode() {
+  if (Animated_Config) {
+    if (Animated_Config.debug) {
+      Debug_Mode = Animated_Config.debug;
+      if (Animated_Config.display_user_agent) {
+        if (Animated_Config.display_user_agent == true) {
+          alert(navigator.userAgent);
         }
       }
-      else {
-        Debug_Mode = false;
-      }
-      if(!currentConfig()){
-        DEBUG_MESSAGE("No configuration found for this view");
-      }
     }
-    else{
+    else {
+      Debug_Mode = false;
+    }
+  }
+  else {
+    Debug_Mode = false;
+  }
+}
+
+//main function
+function run() {
+  getVars();
+  setDebugMode();
+  STATUS_MESSAGE("Starting");
+  DEBUG_MESSAGE("Starting, Debug mode enabled");
+  if (!Loaded) {
+    if (!currentConfig() && Debug_Mode) {
+      DEBUG_MESSAGE("No configuration found for this view");
+    }
+    else {
       STATUS_MESSAGE("No configuration found for this dashboard");
     }
   }
@@ -536,13 +540,15 @@ function run() {
   if (!Haobj) {
     document.querySelector("home-assistant").provideHass({
       set hass(value) {
-        if(Haobj && Haobj.panelUrl != value.panelUrl){
+        if (Haobj && Haobj.panelUrl != value.panelUrl) {
           var wait_interval = setInterval(() => {
             getVars()
             if (Hui) {
               Previous_Entity = null;
               Previous_State = null;
               Loaded = false;
+              View_Loaded = false;
+              View_Observer.disconnect();
               run();
               clearInterval(wait_interval);
             }
@@ -565,13 +571,12 @@ function run() {
       }
     });
   }
-  else{
-    if(!Loaded){
+  else {
+    if (!Loaded) {
       renderBackgroundHTML();
     }
   }
 
-  View_Observer.disconnect();
   View_Observer.observe(View, {
     characterData: true,
     childList: true,
