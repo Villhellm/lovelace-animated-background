@@ -378,6 +378,7 @@ function renderBackgroundHTML() {
   if(!temp_enabled){
     return;
   }
+  
   var html_to_render;
   if (state_url != "" && Hui) {
     var bg = Hui.shadowRoot.getElementById("background-video");
