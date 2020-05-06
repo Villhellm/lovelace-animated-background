@@ -73,6 +73,9 @@ function getVars() {
 var View_Observer = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.addedNodes.length > 0) {
+      if(!currentConfig()){
+        DEBUG_MESSAGE("No configuration found for this view");
+      }
       View_Loaded = false;
       renderBackgroundHTML();
     }
@@ -342,9 +345,6 @@ function renderBackgroundHTML() {
   var state_url = "";
 
   if (!current_config) {
-    if(Animated_Config){
-      DEBUG_MESSAGE("No configuration found for this view");
-    }
     return;
   }
 
@@ -522,6 +522,9 @@ function run() {
       }
       else {
         Debug_Mode = false;
+      }
+      if(!currentConfig()){
+        DEBUG_MESSAGE("No configuration found for this view");
       }
     }
     else{
