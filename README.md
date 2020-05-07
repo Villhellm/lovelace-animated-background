@@ -7,7 +7,7 @@ This module is for [Lovelace](https://www.home-assistant.io/lovelace) on [Home A
 
 Create animated backgrounds based on the state of one of your entities. Originally designed for changing with the weather, à la [VideoBackground-Card](https://github.com/Perdemot/Lovelace-Cards/tree/master/VideoBackground-Card), you can now choose any entity in home assistant and create an animated background for each of its states.
 
-A big thanks to [Customer Header](https://github.com/maykar/custom-header) and [VideoBackground-Card](https://github.com/Perdemot/Lovelace-Cards/tree/master/VideoBackground-Card) for the inspiration. All example animation files used in this repo are originally from the VideoBackground-Card repo.
+A big thanks to [Customer Header](https://github.com/maykar/custom-header) and [VideoBackground-Card](https://github.com/Perdemot/Lovelace-Cards/tree/master/VideoBackground-Card) for the inspiration.
 
 Example:
 ![Example](https://raw.githubusercontent.com/Villhellm/README_images/master/Animation.gif)
@@ -16,7 +16,7 @@ Example:
 
 ### Step 1
 
-Install `animated-background` by copying `animated-background.js` from this repo to `<config directory>/www/animated-background.js` on your Home Assistant instance. This repo also includes a handful of default animation pages to use if you would like.
+Install `animated-background` by copying `animated-background.js` from this repo to `<config directory>/www/animated-background.js` on your Home Assistant instance.
 
 ### Step 2
 
@@ -82,7 +82,7 @@ views: ...
 
 ### Step 1
 
-Make sure you have [HACS](https://github.com/custom-components/hacs) installed, and proceed with the instructions for [adding a custom repository](https://custom-components.github.io/hacs/usage/settings/#add-custom-repositories)
+Make sure you have [HACS](https://github.com/custom-components/hacs) installed, find Animated Background in the plug section, and install.
 
 ### Step 2
 
