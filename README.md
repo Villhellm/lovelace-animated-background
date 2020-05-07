@@ -150,14 +150,14 @@ Configuration for Animated Background goes into the root of your Lovelace config
 
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
-| default_url | string | **Optional** | If no matching state is found, this is the fallback video url
+| default_url | string | **Optional** | If no matching state is found, this is the fallback video url. You can either define a single url or an array. If an array is defined then a random video will be selected from that array.
 | enabled | bool | **Optional** | Set to false to disable Animated Background
 | display_user_agent | bool | **Optional** | If set to true you will get an alert with your current user agent. This will help determine your device to use in `excluded_devices` or `included_devices`
 | debug | bool | **Optional** | Get more detailed log messages
 | views | list ([views](#view-configuration)) | **Optional** | Allows you to set custom configurations per view
 | groups | list ([group](#group-configuration)) | **Optional** | Allows you to set custom configurations that can be referenced in lovelace view configurations
 | entity | string | **Optional** | Entity to check for state changes
-| state_url | map | **Optional** | Map of states and video urls. Set to 'none' to disable background for the defined state (see example). You can either define a single url or an array. Required if `entity` is defined
+| state_url | map | **Optional** | Map of states and video urls. Set to 'none' to disable background for the defined state (see example). You can either define a single url or an array. If an array is defined then a random video will be selected from that array. Required if `entity` is defined.
 | included_users | list (string) | **Optional** | List of users that will display animated background. If this option is set any users not included in this list will be excluded.
 | included_devices | list (string) | **Optional** | List of devices that will display animated background. If this option is set any devices not included in this list will be excluded. Ex:  iphone, ipad, windows, macintosh, android
 | excluded_users | list (string) | **Optional** | Users to be excluded
