@@ -311,10 +311,10 @@ views:
 
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
-| default_url | string | **Optional** | If no matching state is found, this is the fallback url
+| default_url | string | **Optional** | If no matching state is found, this is the fallback video url. You can either define a single url or an array. If an array is defined then a random video will be selected from that array.
 | enabled | bool | **Optional** | Set to false to disable Animated Background
 | entity | string | **Optional** | Entity to check for state changes
-| state_url | map | **Optional** | Map of states and urls. Set to 'none' to disable background for the defined state (see example). Required if `entity` is defined
+| state_url | map | **Optional** | Map of states and video urls. Set to 'none' to disable background for the defined state (see example). You can either define a single url or an array. If an array is defined then a random video will be selected from that array. Required if `entity` is defined.
 | included_users | list (string) | **Optional** | List of users that will display animated background. If this option is set any users not included in this list will be excluded.
 | included_devices | list (string) | **Optional** | List of devices that will display animated background. If this option is set any devices not included in this list will be excluded. Ex:  iphone, ipad, windows, macintosh, android
 | excluded_users | list (string) | **Optional** | Users to be excluded
@@ -323,6 +323,6 @@ views:
 # Warning to mobile users
 While I've done my best to perfect the device/user exceptions, I am not perfect. If you are using a mobile device and using an exception to prevent Animated Background from loading, please keep an eye on the Home Assistant app data use. If you notice unusually high usage after installing the plugin open an issue immediately and I will do my best to fix it. With the way themes function after Home Assistant .108 it is possible that the background video is being loaded behind the theme background (though I am pretty sure I've caught and destroyed all the bugs in that area).
 
-If you plan on *using* Animated Background on a mobile device, be aware that this will most likly use a lot of mobile data.
+If you plan on *using* Animated Background on a mobile device, be aware that this will most likely use a lot of mobile data.
 
 [Troubleshooting](https://github.com/thomasloven/hass-config/wiki/Lovelace-Plugins)
