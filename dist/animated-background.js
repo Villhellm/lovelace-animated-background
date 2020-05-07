@@ -337,48 +337,45 @@ function renderBackgroundHTML() {
   var current_config = currentConfig();
   var state_url = "";
 
-  if (!current_config) {
-    return;
-  }
-
   //rerender background if entity has changed (to avoid no background refresh if the new entity happens to have the same state)
-  if (current_config.entity && Previous_Entity != current_config.entity) {
+  if (current_config && current_config.entity && Previous_Entity != current_config.entity) {
     Previous_State = null;
   }
 
-  //get state of config object 
-  if (current_config.entity) {
-    var current_state = getEntityState(current_config.entity);
-    if (Previous_State != current_state) {
-      View_Loaded = false;
-      STATUS_MESSAGE("Configured entity " + current_config.entity + " is now " + current_state, true);
-      if (current_config.state_url) {
-        if (current_config.state_url[current_state]) {
-          state_url = current_config.state_url[current_state];
-        }
-        else {
-          if (current_config.default_url) {
-            state_url = current_config.default_url;
+  //get state of config object
+  if(current_config){
+    if (current_config.entity) {
+      var current_state = getEntityState(current_config.entity);
+      if (Previous_State != current_state) {
+        View_Loaded = false;
+        STATUS_MESSAGE("Configured entity " + current_config.entity + " is now " + current_state, true);
+        if (current_config.state_url) {
+          if (current_config.state_url[current_state]) {
+            state_url = current_config.state_url[current_state];
+          }
+          else {
+            if (current_config.default_url) {
+              state_url = current_config.default_url;
+            }
           }
         }
+        Previous_State = current_state;
+        Previous_Entity = current_config.entity;
       }
-      Previous_State = current_state;
-      Previous_Entity = current_config.entity;
     }
-  }
-  else {
-    if (current_config.default_url) {
-      state_url = current_config.default_url;
+    else {
+      if (current_config.default_url) {
+        state_url = current_config.default_url;
+      }
     }
   }
 
   var temp_enabled = enabled();
   processDefaultBackground(temp_enabled);
 
-  if(!temp_enabled){
+  if(!temp_enabled || !current_config){
     return;
   }
-  
   var html_to_render;
   if (state_url != "" && Hui) {
     var bg = Hui.shadowRoot.getElementById("background-video");
