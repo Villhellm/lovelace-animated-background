@@ -501,12 +501,17 @@ function processDefaultBackground(temp_enabled) {
         }
 
         if (view_node || view_node_panel) {
+          //required because ios pre 13.4 bitches out if there is nullish coalescing operator ('??')
+          var iphone_bullshit_fixer = view_node;
+          if(!iphone_bullshit_fixer){
+            iphone_bullshit_fixer = view_node_panel;
+          }
           if (temp_enabled) {
-            removeDefaultBackground(view_node ?? view_node_panel);
+            removeDefaultBackground(iphone_bullshit_fixer);
             DEBUG_MESSAGE("Removing view background for configuration:", currentConfig(), true);
           }
           else {
-            restoreDefaultBackground(view_node ?? view_node_panel);
+            restoreDefaultBackground(iphone_bullshit_fixer);
             if (current_config && current_config.reason) {
               DEBUG_MESSAGE("Current config is disabled because " + current_config.reason, null, true);
             }
@@ -594,6 +599,11 @@ function run() {
       renderBackgroundHTML();
     }
   }
+  
+  if(!View){
+    restart();
+    return;
+  }
 
   View_Observer.observe(View, {
     characterData: true,
@@ -620,6 +630,7 @@ function run() {
 }
 
 function restart() {
+  clearInterval(wait_interval);
   var wait_interval = setInterval(() => {
     getVars()
     if (Hui) {
