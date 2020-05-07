@@ -25,19 +25,51 @@ Add the custom element in the root of your `ui-lovelace.yaml` (or Lovelace raw c
 Ex:
 ```yaml
 animated_background:
-  default_url: /local/animated-background/background-animations/sunny.html
+  default_url: "https://cdn.flixel.com/flixel/ypy8bw9fgw1zv2b4htp2.hd.mp4"
   included_users:
     - Villhellm
   # Dark Sky is just an example, you do not need Dark Sky for this to work
   entity: "weather.dark_sky"
   state_url:
-    'sunny': /local/animated-background/background-animations/sunny.html
-    'partlycloudy': /local/animated-background/background-animations/cloudy.html
-    'cloudy': /local/animated-background/background-animations/cloudy.html
-    'mostlycloudy': none
-    'clear-night': /local/animated-background/background-animations/night.html
-    'fog': /local/animated-background/background-animations/fog.html
-    'rainy': /local/animated-background/background-animations/rainy.html
+    'sunny':
+      - "https://cdn.flixel.com/flixel/hlhff0h8md4ev0kju5be.hd.mp4"
+      - "https://cdn.flixel.com/flixel/zjqsoc6ecqhntpl5vacs.hd.mp4"
+      - "https://cdn.flixel.com/flixel/jvw1avupguhfbo11betq.hd.mp4"
+      - "https://cdn.flixel.com/flixel/8cmeusxf3pkanai43djs.hd.mp4"
+      - "https://cdn.flixel.com/flixel/guwb10mfddctfvwioaex.hd.mp4"
+
+    'partlycloudy':
+      - https://cdn.flixel.com/flixel/13e0s6coh6ayapvdyqnv.hd.mp4"
+      - "https://cdn.flixel.com/flixel/aorl3skmssy7udwopk22.hd.mp4"
+      - "https://cdn.flixel.com/flixel/qed6wvf2igukiioykg3r.hd.mp4"
+      - "https://cdn.flixel.com/flixel/3rd72eezaj6d23ahlo7y.hd.mp4"
+      - "https://cdn.flixel.com/flixel/9m11gd43m6qn3y93ntzp.hd.mp4"
+      - "https://cdn.flixel.com/flixel/hrkw2m8eofib9sk7t1v2.hd.mp4"
+
+    'cloudy':
+      - https://cdn.flixel.com/flixel/13e0s6coh6ayapvdyqnv.hd.mp4"
+      - "https://cdn.flixel.com/flixel/aorl3skmssy7udwopk22.hd.mp4"
+      - "https://cdn.flixel.com/flixel/qed6wvf2igukiioykg3r.hd.mp4"
+      - "https://cdn.flixel.com/flixel/3rd72eezaj6d23ahlo7y.hd.mp4"
+      - "https://cdn.flixel.com/flixel/9m11gd43m6qn3y93ntzp.hd.mp4"
+      - "https://cdn.flixel.com/flixel/hrkw2m8eofib9sk7t1v2.hd.mp4"
+
+    'mostlycloudy':
+      - "https://cdn.flixel.com/flixel/e95h5cqyvhnrk4ytqt4q.hd.mp4"
+      - "https://cdn.flixel.com/flixel/l2bjw34wnusyf5q2qq3p.hd.mp4"
+      - "https://cdn.flixel.com/flixel/rrgta099ulami3zb9fd2.hd.mp4"
+
+    'clear-night':
+      - "https://cdn.flixel.com/flixel/x9dr8caygivq5secll7i.hd.mp4"
+      - "https://cdn.flixel.com/flixel/v26zyfd6yf0r33s46vpe.hd.mp4"
+      - "https://cdn.flixel.com/flixel/ypy8bw9fgw1zv2b4htp2.hd.mp4"
+      - "https://cdn.flixel.com/flixel/rosz2gi676xhkiw1ut6i.hd.mp4"
+
+    'fog':
+      - "https://cdn.flixel.com/flixel/vwqzlk4turo2449be9uf.hd.mp4"
+      - "https://cdn.flixel.com/flixel/5363uhabodwwrzgnq6vx.hd.mp4"
+
+    'rainy': "https://cdn.flixel.com/flixel/f0w23bd0enxur5ff0bxz.hd.mp4"
 
 title: Home
 views: ...
@@ -59,19 +91,52 @@ Add the custom element in the root of your `ui-lovelace.yaml` (or Lovelace raw c
 Ex:
 ```yaml
 animated_background:
-  default_url: /hacsfiles/lovelace-animated-background/background-animations/sunny.html
+  default_url: "https://cdn.flixel.com/flixel/ypy8bw9fgw1zv2b4htp2.hd.mp4"
   included_users:
     - Villhellm
   # Dark Sky is just an example, you do not need Dark Sky for this to work
   entity: "weather.dark_sky"
   state_url:
-    'sunny': /hacsfiles/lovelace-animated-background/background-animations/sunny.html
-    'partlycloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
-    'cloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
-    'mostlycloudy': none
-    'clear-night': /hacsfiles/lovelace-animated-background/background-animations/night.html
-    'fog': /hacsfiles/lovelace-animated-background/background-animations/fog.html
-    'rainy': /hacsfiles/lovelace-animated-background/background-animations/rainy.html
+    'sunny':
+      - "https://cdn.flixel.com/flixel/hlhff0h8md4ev0kju5be.hd.mp4"
+      - "https://cdn.flixel.com/flixel/zjqsoc6ecqhntpl5vacs.hd.mp4"
+      - "https://cdn.flixel.com/flixel/jvw1avupguhfbo11betq.hd.mp4"
+      - "https://cdn.flixel.com/flixel/8cmeusxf3pkanai43djs.hd.mp4"
+      - "https://cdn.flixel.com/flixel/guwb10mfddctfvwioaex.hd.mp4"
+
+    'partlycloudy':
+      - https://cdn.flixel.com/flixel/13e0s6coh6ayapvdyqnv.hd.mp4"
+      - "https://cdn.flixel.com/flixel/aorl3skmssy7udwopk22.hd.mp4"
+      - "https://cdn.flixel.com/flixel/qed6wvf2igukiioykg3r.hd.mp4"
+      - "https://cdn.flixel.com/flixel/3rd72eezaj6d23ahlo7y.hd.mp4"
+      - "https://cdn.flixel.com/flixel/9m11gd43m6qn3y93ntzp.hd.mp4"
+      - "https://cdn.flixel.com/flixel/hrkw2m8eofib9sk7t1v2.hd.mp4"
+
+    'cloudy':
+      - https://cdn.flixel.com/flixel/13e0s6coh6ayapvdyqnv.hd.mp4"
+      - "https://cdn.flixel.com/flixel/aorl3skmssy7udwopk22.hd.mp4"
+      - "https://cdn.flixel.com/flixel/qed6wvf2igukiioykg3r.hd.mp4"
+      - "https://cdn.flixel.com/flixel/3rd72eezaj6d23ahlo7y.hd.mp4"
+      - "https://cdn.flixel.com/flixel/9m11gd43m6qn3y93ntzp.hd.mp4"
+      - "https://cdn.flixel.com/flixel/hrkw2m8eofib9sk7t1v2.hd.mp4"
+
+    'mostlycloudy':
+      - "https://cdn.flixel.com/flixel/e95h5cqyvhnrk4ytqt4q.hd.mp4"
+      - "https://cdn.flixel.com/flixel/l2bjw34wnusyf5q2qq3p.hd.mp4"
+      - "https://cdn.flixel.com/flixel/rrgta099ulami3zb9fd2.hd.mp4"
+
+    'clear-night':
+      - "https://cdn.flixel.com/flixel/x9dr8caygivq5secll7i.hd.mp4"
+      - "https://cdn.flixel.com/flixel/v26zyfd6yf0r33s46vpe.hd.mp4"
+      - "https://cdn.flixel.com/flixel/ypy8bw9fgw1zv2b4htp2.hd.mp4"
+      - "https://cdn.flixel.com/flixel/rosz2gi676xhkiw1ut6i.hd.mp4"
+
+    'fog':
+      - "https://cdn.flixel.com/flixel/vwqzlk4turo2449be9uf.hd.mp4"
+      - "https://cdn.flixel.com/flixel/5363uhabodwwrzgnq6vx.hd.mp4"
+
+    'rainy': "https://cdn.flixel.com/flixel/f0w23bd0enxur5ff0bxz.hd.mp4"
+
 
 title: Home
 views: ...
@@ -85,22 +150,20 @@ Configuration for Animated Background goes into the root of your Lovelace config
 
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
-| default_url | string | **Optional** | If no matching state is found, this is the fallback url
+| default_url | string | **Optional** | If no matching state is found, this is the fallback video url. You can either define a single url or an array. If an array is defined then a random video will be selected from that array.
 | enabled | bool | **Optional** | Set to false to disable Animated Background
 | display_user_agent | bool | **Optional** | If set to true you will get an alert with your current user agent. This will help determine your device to use in `excluded_devices` or `included_devices`
 | debug | bool | **Optional** | Get more detailed log messages
 | views | list ([views](#view-configuration)) | **Optional** | Allows you to set custom configurations per view
 | groups | list ([group](#group-configuration)) | **Optional** | Allows you to set custom configurations that can be referenced in lovelace view configurations
 | entity | string | **Optional** | Entity to check for state changes
-| state_url | map | **Optional** | Map of states and urls. Set to 'none' to disable background for the defined state (see example). Required if `entity` is defined
+| state_url | map | **Optional** | Map of states and video urls. Set to 'none' to disable background for the defined state (see example). You can either define a single url or an array. If an array is defined then a random video will be selected from that array. Required if `entity` is defined.
 | included_users | list (string) | **Optional** | List of users that will display animated background. If this option is set any users not included in this list will be excluded.
 | included_devices | list (string) | **Optional** | List of devices that will display animated background. If this option is set any devices not included in this list will be excluded. Ex:  iphone, ipad, windows, macintosh, android
 | excluded_users | list (string) | **Optional** | Users to be excluded
 | excluded_devices | list (string) | **Optional** | Devices to be excluded Ex:  iphone, ipad, windows, macintosh, android
 
 While all entries are optional, it is recommended to at least set `default_url` or `entity` with `state_url`. Without one of those set you would never know this plugin was installed. 
-
-Also note that if you make any changes to the included HTML files, i.e. inserting your own video files, make sure to move the files to a different directory so your changes are not overwritten when you update via HACS.
 
 ## View Configuration
 
@@ -112,28 +175,59 @@ Also note that if you make any changes to the included HTML files, i.e. insertin
 Ex:
 ```yaml
 animated_background:
-  default_url: /hacsfiles/lovelace-animated-background/background-animations/sunny.html
+  default_url: "https://cdn.flixel.com/flixel/ypy8bw9fgw1zv2b4htp2.hd.mp4"
   included_users:
     - Villhellm
   # Dark Sky is just an example, you do not need Dark Sky for this to work
   entity: "weather.dark_sky"
   state_url:
-    'sunny': /hacsfiles/lovelace-animated-background/background-animations/sunny.html
-    'partlycloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
-    'cloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
-    'mostlycloudy': none
-    'clear-night': /hacsfiles/lovelace-animated-background/background-animations/night.html
-    'fog': /hacsfiles/lovelace-animated-background/background-animations/fog.html
-    'rainy': /hacsfiles/lovelace-animated-background/background-animations/rainy.html
+    'sunny':
+      - "https://cdn.flixel.com/flixel/hlhff0h8md4ev0kju5be.hd.mp4"
+      - "https://cdn.flixel.com/flixel/zjqsoc6ecqhntpl5vacs.hd.mp4"
+      - "https://cdn.flixel.com/flixel/jvw1avupguhfbo11betq.hd.mp4"
+      - "https://cdn.flixel.com/flixel/8cmeusxf3pkanai43djs.hd.mp4"
+      - "https://cdn.flixel.com/flixel/guwb10mfddctfvwioaex.hd.mp4"
 
+    'partlycloudy':
+      - https://cdn.flixel.com/flixel/13e0s6coh6ayapvdyqnv.hd.mp4"
+      - "https://cdn.flixel.com/flixel/aorl3skmssy7udwopk22.hd.mp4"
+      - "https://cdn.flixel.com/flixel/qed6wvf2igukiioykg3r.hd.mp4"
+      - "https://cdn.flixel.com/flixel/3rd72eezaj6d23ahlo7y.hd.mp4"
+      - "https://cdn.flixel.com/flixel/9m11gd43m6qn3y93ntzp.hd.mp4"
+      - "https://cdn.flixel.com/flixel/hrkw2m8eofib9sk7t1v2.hd.mp4"
+
+    'cloudy':
+      - https://cdn.flixel.com/flixel/13e0s6coh6ayapvdyqnv.hd.mp4"
+      - "https://cdn.flixel.com/flixel/aorl3skmssy7udwopk22.hd.mp4"
+      - "https://cdn.flixel.com/flixel/qed6wvf2igukiioykg3r.hd.mp4"
+      - "https://cdn.flixel.com/flixel/3rd72eezaj6d23ahlo7y.hd.mp4"
+      - "https://cdn.flixel.com/flixel/9m11gd43m6qn3y93ntzp.hd.mp4"
+      - "https://cdn.flixel.com/flixel/hrkw2m8eofib9sk7t1v2.hd.mp4"
+
+    'mostlycloudy':
+      - "https://cdn.flixel.com/flixel/e95h5cqyvhnrk4ytqt4q.hd.mp4"
+      - "https://cdn.flixel.com/flixel/l2bjw34wnusyf5q2qq3p.hd.mp4"
+      - "https://cdn.flixel.com/flixel/rrgta099ulami3zb9fd2.hd.mp4"
+
+    'clear-night':
+      - "https://cdn.flixel.com/flixel/x9dr8caygivq5secll7i.hd.mp4"
+      - "https://cdn.flixel.com/flixel/v26zyfd6yf0r33s46vpe.hd.mp4"
+      - "https://cdn.flixel.com/flixel/ypy8bw9fgw1zv2b4htp2.hd.mp4"
+      - "https://cdn.flixel.com/flixel/rosz2gi676xhkiw1ut6i.hd.mp4"
+
+    'fog':
+      - "https://cdn.flixel.com/flixel/vwqzlk4turo2449be9uf.hd.mp4"
+      - "https://cdn.flixel.com/flixel/5363uhabodwwrzgnq6vx.hd.mp4"
+
+    'rainy': "https://cdn.flixel.com/flixel/f0w23bd0enxur5ff0bxz.hd.mp4"
   views:
     - path: gaming
       config:
-        default_url: /hacsfiles/lovelace-animated-background/background-animations/sunny.html
+        default_url: "https://cdn.flixel.com/flixel/ypy8bw9fgw1zv2b4htp2.hd.mp4"
         entity: "light.game_room"
         state_url:
-          'on': /hacsfiles/lovelace-animated-background/background-animations/sunny.html
-          'off': /hacsfiles/lovelace-animated-background/background-animations/night.html 
+          'on':  "https://cdn.flixel.com/flixel/8cmeusxf3pkanai43djs.hd.mp4"
+          'off': "https://cdn.flixel.com/flixel/ypy8bw9fgw1zv2b4htp2.hd.mp4"
 title: Home
 views: ...
 ```
@@ -150,19 +244,51 @@ Groups can be used to easily reuse Animated Background configurations. After def
 Ex:
 ```yaml
 animated_background:
-  default_url: /hacsfiles/lovelace-animated-background/background-animations/night.html
+  default_url: "https://cdn.flixel.com/flixel/ypy8bw9fgw1zv2b4htp2.hd.mp4"
   groups:
     - name: weather
       config:
         entity: "weather.home"
         state_url:
-            'sunny': /hacsfiles/lovelace-animated-background/background-animations/sunny.html
-            'partlycloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
-            'cloudy': /hacsfiles/lovelace-animated-background/background-animations/cloudy.html
-            'mostlycloudy': none
-            'clear-night': /hacsfiles/lovelace-animated-background/background-animations/night.html
-            'fog': /hacsfiles/lovelace-animated-background/background-animations/fog.html
-            'rainy': /hacsfiles/lovelace-animated-background/background-animations/rainy.html
+          'sunny':
+            - "https://cdn.flixel.com/flixel/hlhff0h8md4ev0kju5be.hd.mp4"
+            - "https://cdn.flixel.com/flixel/zjqsoc6ecqhntpl5vacs.hd.mp4"
+            - "https://cdn.flixel.com/flixel/jvw1avupguhfbo11betq.hd.mp4"
+            - "https://cdn.flixel.com/flixel/8cmeusxf3pkanai43djs.hd.mp4"
+            - "https://cdn.flixel.com/flixel/guwb10mfddctfvwioaex.hd.mp4"
+
+          'partlycloudy':
+            - https://cdn.flixel.com/flixel/13e0s6coh6ayapvdyqnv.hd.mp4"
+            - "https://cdn.flixel.com/flixel/aorl3skmssy7udwopk22.hd.mp4"
+            - "https://cdn.flixel.com/flixel/qed6wvf2igukiioykg3r.hd.mp4"
+            - "https://cdn.flixel.com/flixel/3rd72eezaj6d23ahlo7y.hd.mp4"
+            - "https://cdn.flixel.com/flixel/9m11gd43m6qn3y93ntzp.hd.mp4"
+            - "https://cdn.flixel.com/flixel/hrkw2m8eofib9sk7t1v2.hd.mp4"
+
+          'cloudy':
+            - https://cdn.flixel.com/flixel/13e0s6coh6ayapvdyqnv.hd.mp4"
+            - "https://cdn.flixel.com/flixel/aorl3skmssy7udwopk22.hd.mp4"
+            - "https://cdn.flixel.com/flixel/qed6wvf2igukiioykg3r.hd.mp4"
+            - "https://cdn.flixel.com/flixel/3rd72eezaj6d23ahlo7y.hd.mp4"
+            - "https://cdn.flixel.com/flixel/9m11gd43m6qn3y93ntzp.hd.mp4"
+            - "https://cdn.flixel.com/flixel/hrkw2m8eofib9sk7t1v2.hd.mp4"
+
+          'mostlycloudy':
+            - "https://cdn.flixel.com/flixel/e95h5cqyvhnrk4ytqt4q.hd.mp4"
+            - "https://cdn.flixel.com/flixel/l2bjw34wnusyf5q2qq3p.hd.mp4"
+            - "https://cdn.flixel.com/flixel/rrgta099ulami3zb9fd2.hd.mp4"
+
+          'clear-night':
+            - "https://cdn.flixel.com/flixel/x9dr8caygivq5secll7i.hd.mp4"
+            - "https://cdn.flixel.com/flixel/v26zyfd6yf0r33s46vpe.hd.mp4"
+            - "https://cdn.flixel.com/flixel/ypy8bw9fgw1zv2b4htp2.hd.mp4"
+            - "https://cdn.flixel.com/flixel/rosz2gi676xhkiw1ut6i.hd.mp4"
+
+          'fog':
+            - "https://cdn.flixel.com/flixel/vwqzlk4turo2449be9uf.hd.mp4"
+            - "https://cdn.flixel.com/flixel/5363uhabodwwrzgnq6vx.hd.mp4"
+
+          'rainy': "https://cdn.flixel.com/flixel/f0w23bd0enxur5ff0bxz.hd.mp4"
 views:
   - path: home
     title: Home
@@ -190,45 +316,6 @@ views:
 | included_devices | list (string) | **Optional** | List of devices that will display animated background. If this option is set any devices not included in this list will be excluded. Ex:  iphone, ipad, windows, macintosh, android
 | excluded_users | list (string) | **Optional** | Users to be excluded
 | excluded_devices | list (string) | **Optional** | Devices to be excluded Ex:  iphone, ipad, windows, macintosh, android
-
-## Use your own mp4 video file
-If you would like to use your own video file, go into the desired HTML file and find the script block. This block contains a method that will randomly select a video in the `cinemagraphs` array each time the HTML file is loaded. If you only want one video file you can remove all other options and change the url to your desired mp4.
-
-Ex:
-```html
-  <script>
-    function randomIntFromInterval(min, max) { // min and max included
-      var return_int = Math.floor(Math.random() * (max - min + 1) + min);
-      if(window.location.search){
-        var search = new URLSearchParams(window.location.search);
-        var video = search.get("video");
-        if(!isNaN(video)){
-          if(video < cinemagraphs.length && video >=0){
-            return_int = video;
-          }
-        }
-      }
-      return return_int;
-    }
-
-    var cinemagraphs = [
-      "https://cdn.flixel.com/flixel/x9dr8caygivq5secll7i.hd.mp4", //remove or change this line
-      "https://cdn.flixel.com/flixel/v26zyfd6yf0r33s46vpe.hd.mp4", //remove or change this line
-      "https://cdn.flixel.com/flixel/ypy8bw9fgw1zv2b4htp2.hd.mp4", //remove or change this line
-      "https://cdn.flixel.com/flixel/rosz2gi676xhkiw1ut6i.hd.mp4" //remove or change this line
-    ];
-    document.getElementById("cinemagraph").setAttribute("src", cinemagraphs[randomIntFromInterval(0, cinemagraphs.length - 1)]); 
-  </script>
- ```
-
-Bonus tip: If you have multiple videos defined but you have a view that you only want a single video to display, you can do so by adding a `?video=index` parameter  at the end of your config url where `index` is whatever video index you want to use, from 0 to the number of cinemagraph urls minus 1.
-
-Ex:
-```yaml
-animated_background:
-  default_url: /hacsfiles/lovelace-animated-background/background-animations/night.html?video=1
-  #This will display only the second video in the cinemagraphs array (remember arrays start at 0)
-```
 
 # Warning to mobile users
 While I've done my best to perfect the device/user exceptions, I am not perfect. If you are using a mobile device and using an exception to prevent Animated Background from loading, please keep an eye on the Home Assistant app data use. If you notice unusually high usage after installing the plugin open an issue immediately and I will do my best to fix it. With the way themes function after Home Assistant .108 it is possible that the background video is being loaded behind the theme background (though I am pretty sure I've caught and destroyed all the bugs in that area).

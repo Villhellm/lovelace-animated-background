@@ -45,6 +45,10 @@ function DEBUG_MESSAGE(message, object, only_if_view_not_loaded) {
   }
 }
 
+function randomIntFromInterval(min, max) { // min and max included
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 //reset all DOM variables
 function getVars() {
   Root = document.querySelector("home-assistant");
@@ -343,20 +347,25 @@ function renderBackgroundHTML() {
   }
 
   //get state of config object
-  if(current_config){
+  if (current_config) {
     if (current_config.entity) {
       var current_state = getEntityState(current_config.entity);
       if (Previous_State != current_state) {
         View_Loaded = false;
         STATUS_MESSAGE("Configured entity " + current_config.entity + " is now " + current_state, true);
         if (current_config.state_url) {
-          if (current_config.state_url[current_state]) {
-            state_url = current_config.state_url[current_state];
+          var url = current_config.state_url[current_state];
+          if (Array.isArray(url)) {
+            state_url = url[randomIntFromInterval(0, url.length - 1)];
           }
           else {
-            if (current_config.default_url) {
-              state_url = current_config.default_url;
-            }
+            state_url = current_config.state_url[current_state];
+
+          }
+        }
+        else {
+          if (current_config.default_url) {
+            state_url = current_config.default_url;
           }
         }
         Previous_State = current_state;
@@ -364,8 +373,14 @@ function renderBackgroundHTML() {
       }
     }
     else {
-      if (current_config.default_url) {
-        state_url = current_config.default_url;
+      var url = current_config.default_url;
+      if (url) {
+        if (Array.isArray(url)) {
+          state_url = url[randomIntFromInterval(0, url.length - 1)];
+        }
+        else {
+          state_url = url;
+        }
       }
     }
   }
@@ -373,12 +388,45 @@ function renderBackgroundHTML() {
   var temp_enabled = enabled();
   processDefaultBackground(temp_enabled);
 
-  if(!temp_enabled || !current_config){
+  if (!temp_enabled || !current_config) {
     return;
   }
   var html_to_render;
   if (state_url != "" && Hui) {
-    var bg = Hui.shadowRoot.getElementById("background-video");
+    var bg = Hui.shadowRoot.getElementById("background-iframe");
+    var source_doc = `
+    <html>
+    <head>
+      <title>Cloudy</title>
+      <style type='text/css'>
+        body {
+          min-height: 100vh;
+          min-width: 100vw;
+          max-height: 100%;
+          max-width: 100%;
+          overflow: hidden;
+          margin: 0;
+          position: relative;
+        }
+    
+        video {
+          min-width: 100%;
+          min-height: 100%;
+          width: auto;
+          height: auto;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+      </style>
+    </head>  
+    <body>
+      <video id='cinemagraph' autoplay='' loop='' preload='' playsinline='' muted='' poster=''>
+        <source src='${state_url}' type='video/mp4'>
+      </video>
+    </body>
+    </html>`;
     if (!bg) {
       if (!current_config.entity) {
         STATUS_MESSAGE("Applying default background", true);
@@ -399,20 +447,20 @@ function renderBackgroundHTML() {
       }    
     </style>
     <div id="background-video" class="bg-wrap">
-     <iframe class="bg-video" frameborder="0" src="${state_url}"/> 
+     <iframe id="background-iframe" class="bg-video" frameborder="0" srcdoc="${source_doc}"/> 
     </div>`;
       View_Layout.insertAdjacentHTML("beforebegin", html_to_render);
       Previous_Url = state_url;
     }
     else {
-      html_to_render = `<iframe class="bg-video" frameborder="0" src="${state_url}"/>`;
+      html_to_render = `<source src='${state_url}' type='video/mp4'>`;
       if (current_config.entity || (Previous_Url != state_url)) {
         if (!current_config.entity) {
           STATUS_MESSAGE("Applying default background", true);
           Previous_Entity = null;
           Previous_State = null;
         }
-        bg.innerHTML = html_to_render;
+        bg.srcdoc = source_doc;
         Previous_Url = state_url;
       }
     }
@@ -477,7 +525,7 @@ function processDefaultBackground(temp_enabled) {
   }
 }
 
-function clearMemes(){
+function clearMemes() {
   clearInterval(Meme_Remover);
   Meme_Remover = null;
 }
