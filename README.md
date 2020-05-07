@@ -1,3 +1,6 @@
+MAJOR BREAKING CHANGE IN v0.5.0+
+YOUR ANIMATED BACKGROUND CONFIGURATION WILL NEED TO BE UPDATED
+
 # Animated Lovelace Background
 
 This module is for [Lovelace](https://www.home-assistant.io/lovelace) on [Home Assistant](https://www.home-assistant.io/)
