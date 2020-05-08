@@ -320,6 +320,40 @@ views:
 | excluded_users | list (string) | **Optional** | Users to be excluded
 | excluded_devices | list (string) | **Optional** | Devices to be excluded Ex:  iphone, ipad, windows, macintosh, android
 
+## Example if you want a different background for night and day when a switch changes (or any combination of entities)
+A few people have asked about tying this to multiple entities. The good news is this is already possible with the use of a template sensor. Here is an example of a template sensor that would allow a different background for night/day when a bedroom switch changes.
+
+configuration.yaml
+```yaml
+sensor:
+  - platform: template
+    sensors:
+      sun_bedroom:
+        friendly_name: "Sun and Bedroom"
+        value_template: "{{states('sun.sun') + '-' + states('switch.bedroom')}}"
+        #this will return a state like 'above_horizon-on'
+```
+
+`sun.sun` has two states, `above_horizon` and `below_horizon` AKA day and night.
+So now if you use `sensor.sun_bedroom` instead of just `switch.bedroom`, the beginning of the state will give you the binary state of the sun's position.
+Here is an example of an Animated Background configuration that will use this sensor to give a different background based on the switch *and* whether it is day or night.
+
+ui-lovelace.yaml (or raw configuration)
+```yaml
+animated_background:
+  default_url: "https://cdn.flixel.com/flixel/ypy8bw9fgw1zv2b4htp2.hd.mp4"
+  entity: "sensor.sun_bedroom"
+  state_url:
+    'above_horizon-on': "https://cdn.flixel.com/flixel/hlhff0h8md4ev0kju5be.hd.mp4"
+
+    'below_horizon-on': "https://cdn.flixel.com/flixel/9m11gd43m6qn3y93ntzp.hd.mp4"
+
+    'above_horizon-off': "https://cdn.flixel.com/flixel/zjqsoc6ecqhntpl5vacs.hd.mp4"
+
+    'below_horizon-off': "https://cdn.flixel.com/flixel/hrkw2m8eofib9sk7t1v2.hd.mp4"
+    
+```
+
 # Warning to mobile users
 While I've done my best to perfect the device/user exceptions, I am not perfect. If you are using a mobile device and using an exception to prevent Animated Background from loading, please keep an eye on the Home Assistant app data use. If you notice unusually high usage after installing the plugin open an issue immediately and I will do my best to fix it. With the way themes function after Home Assistant .108 it is possible that the background video is being loaded behind the theme background (though I am pretty sure I've caught and destroyed all the bugs in that area).
 
