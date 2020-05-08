@@ -20,8 +20,7 @@ animated_background:
 **Your view configuration if it contains animated_background**
 
 ```yaml
-animated_background:
-  your_config
+animated_background: your_config
 ```
 
 **Version Numbers**
