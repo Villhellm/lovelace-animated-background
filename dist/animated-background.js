@@ -21,6 +21,7 @@ var Meme_Count = 0;
 let Previous_State;
 let Previous_Entity;
 let Previous_Url;
+let Previous_Config;
 
 function STATUS_MESSAGE(message, force) {
   if (!Debug_Mode) {
@@ -346,6 +347,10 @@ function renderBackgroundHTML() {
     Previous_State = null;
   }
 
+  if(current_config != Previous_Config){
+    Previous_State = null;
+  }
+
   //get state of config object
   if (current_config) {
     if (current_config.entity) {
@@ -391,13 +396,15 @@ function renderBackgroundHTML() {
   if (!temp_enabled || !current_config) {
     return;
   }
+
+  Previous_Config = current_config;
+
   var html_to_render;
   if (state_url != "" && Hui) {
     var bg = Hui.shadowRoot.getElementById("background-iframe");
     var source_doc = `
     <html>
     <head>
-      <title>Cloudy</title>
       <style type='text/css'>
         body {
           min-height: 100vh;
