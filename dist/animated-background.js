@@ -193,7 +193,7 @@ function currentConfig() {
         var current_url = return_config.state_url[current_state];
         if (current_url) {
           if (current_url == "none") {
-            return_config = { enabled: false, reason: "current state('" + current_state + "') state_url is set to 'none'", entity: return_config.entity };
+            return_config = { enabled: false, reason: "current state('" + current_state + "') state_url is set to 'none'", entity: return_config.entity, default_url:return_config.default_url, state_url:return_config.state_url };
           }
         }
       }
@@ -210,9 +210,6 @@ function enabled() {
     if (Animated_Config.default_url || Animated_Config.entity || Animated_Config.views || Animated_Config.groups) {
       temp_enabled = true;
     }
-  }
-  else {
-    return false;
   }
 
   if (temp_enabled == false) {
@@ -341,40 +338,56 @@ function getEntityState(entity) {
 function renderBackgroundHTML() {
   var current_config = currentConfig();
   var state_url = "";
-
+  var temp_enabled = true;
   //rerender background if entity has changed (to avoid no background refresh if the new entity happens to have the same state)
   if (current_config && current_config.entity && Previous_Entity != current_config.entity) {
     Previous_State = null;
   }
 
-  if(current_config != Previous_Config){
+  if (current_config != Previous_Config) {
     Previous_State = null;
   }
 
   //get state of config object
   if (current_config) {
-    if (current_config.entity) {
+    if (current_config.entity && current_config.state_url) {
+      Previous_Entity = current_config.entity;
       var current_state = getEntityState(current_config.entity);
-      if (Previous_State != current_state) {
-        View_Loaded = false;
-        STATUS_MESSAGE("Configured entity " + current_config.entity + " is now " + current_state, true);
-        if (current_config.state_url) {
-          var url = current_config.state_url[current_state];
+      if (current_config.state_url[current_state]) {
+        if (Previous_State != current_state) {
+          View_Loaded = false;
+          STATUS_MESSAGE("Configured entity " + current_config.entity + " is now " + current_state, true);
+          if (current_config.state_url) {
+            var url = current_config.state_url[current_state];
+            if (Array.isArray(url)) {
+              state_url = url[randomIntFromInterval(0, url.length - 1)];
+            }
+            else {
+              state_url = current_config.state_url[current_state];
+            }
+          }
+          Previous_State = current_state;
+        }
+      }
+      else {
+        DEBUG_MESSAGE("No state_url found for the current state '" + current_state + "'. Attempting to set default_url")
+        Previous_State = current_state;
+        Previous_Url = null;
+        var url = current_config.default_url;
+        if (url) {
           if (Array.isArray(url)) {
             state_url = url[randomIntFromInterval(0, url.length - 1)];
           }
           else {
-            state_url = current_config.state_url[current_state];
-
+            state_url = url;
           }
         }
         else {
-          if (current_config.default_url) {
-            state_url = current_config.default_url;
+          if(!current_config.reason){
+            DEBUG_MESSAGE("No default_url found, restoring lovelace theme")
           }
+          temp_enabled = false;
         }
-        Previous_State = current_state;
-        Previous_Entity = current_config.entity;
       }
     }
     else {
@@ -387,10 +400,22 @@ function renderBackgroundHTML() {
           state_url = url;
         }
       }
+      else {
+        if(!current_config.reason){
+          DEBUG_MESSAGE("No default_url found, restoring lovelace theme")
+        }
+        temp_enabled = false;
+      }
     }
   }
+  else {
+    temp_enabled = false;
+  }
 
-  var temp_enabled = enabled();
+  if (temp_enabled) {
+    temp_enabled = enabled();
+  }
+
   processDefaultBackground(temp_enabled);
 
   if (!temp_enabled || !current_config) {
@@ -510,7 +535,7 @@ function processDefaultBackground(temp_enabled) {
         if (view_node || view_node_panel) {
           //required because ios pre 13.4 bitches out if there is nullish coalescing operator ('??')
           var iphone_bullshit_fixer = view_node;
-          if(!iphone_bullshit_fixer){
+          if (!iphone_bullshit_fixer) {
             iphone_bullshit_fixer = view_node_panel;
           }
           if (temp_enabled) {
@@ -606,8 +631,8 @@ function run() {
       renderBackgroundHTML();
     }
   }
-  
-  if(!View){
+
+  if (!View) {
     restart();
     return;
   }

@@ -153,7 +153,7 @@ Configuration for Animated Background goes into the root of your Lovelace config
 
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
-| default_url | string | **Optional** | If no matching state is found, this is the fallback video url. You can either define a single url or an array. If an array is defined then a random video will be selected from that array.
+| default_url | string (or list(string)) | **Optional** | If no matching state is found, this is the fallback video url. You can either define a single url or an array. If an array is defined then a random video will be selected from that array.
 | enabled | bool | **Optional** | Set to false to disable Animated Background
 | display_user_agent | bool | **Optional** | If set to true you will get an alert with your current user agent. This will help determine your device to use in `excluded_devices` or `included_devices`
 | debug | bool | **Optional** | Get more detailed log messages
@@ -311,7 +311,7 @@ views:
 
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
-| default_url | string | **Optional** | If no matching state is found, this is the fallback video url. You can either define a single url or an array. If an array is defined then a random video will be selected from that array.
+| default_url | string (or list(string)) | **Optional** | If no matching state is found, this is the fallback video url. You can either define a single url or an array. If an array is defined then a random video will be selected from that array.
 | enabled | bool | **Optional** | Set to false to disable Animated Background
 | entity | string | **Optional** | Entity to check for state changes
 | state_url | map | **Optional** | Map of states and video urls. Set to 'none' to disable background for the defined state (see example). You can either define a single url or an array. If an array is defined then a random video will be selected from that array. Required if `entity` is defined.
