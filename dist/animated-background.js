@@ -193,7 +193,7 @@ function currentConfig() {
         var current_url = return_config.state_url[current_state];
         if (current_url) {
           if (current_url == "none") {
-            return_config = { enabled: false, reason: "current state('" + current_state + "') state_url is set to 'none'", entity: return_config.entity, default_url:return_config.default_url, state_url:return_config.state_url };
+            return_config = { enabled: false, reason: "current state('" + current_state + "') state_url is set to 'none'", entity: return_config.entity, default_url: return_config.default_url, state_url: return_config.state_url };
           }
         }
       }
@@ -383,7 +383,7 @@ function renderBackgroundHTML() {
           }
         }
         else {
-          if(!current_config.reason){
+          if (!current_config.reason) {
             DEBUG_MESSAGE("No default_url found, restoring lovelace theme")
           }
           temp_enabled = false;
@@ -401,7 +401,7 @@ function renderBackgroundHTML() {
         }
       }
       else {
-        if(!current_config.reason){
+        if (!current_config.reason) {
           DEBUG_MESSAGE("No default_url found, restoring lovelace theme")
         }
         temp_enabled = false;
