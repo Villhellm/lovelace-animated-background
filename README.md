@@ -31,8 +31,8 @@ animated_background:
   default_url: "https://cdn.flixel.com/flixel/ypy8bw9fgw1zv2b4htp2.hd.mp4"
   included_users:
     - Villhellm
-  # Dark Sky is just an example, you do not need Dark Sky for this to work
-  entity: "weather.dark_sky"
+  # This entity is just an example, use whatever entity you would like
+  entity: "weather.home"
   state_url:
     'sunny':
       - "https://cdn.flixel.com/flixel/hlhff0h8md4ev0kju5be.hd.mp4"
@@ -97,8 +97,8 @@ animated_background:
   default_url: "https://cdn.flixel.com/flixel/ypy8bw9fgw1zv2b4htp2.hd.mp4"
   included_users:
     - Villhellm
-  # Dark Sky is just an example, you do not need Dark Sky for this to work
-  entity: "weather.dark_sky"
+  # This entity is just an example, use whatever entity you would like
+  entity: "weather.home"
   state_url:
     'sunny':
       - "https://cdn.flixel.com/flixel/hlhff0h8md4ev0kju5be.hd.mp4"
@@ -181,8 +181,8 @@ animated_background:
   default_url: "https://cdn.flixel.com/flixel/ypy8bw9fgw1zv2b4htp2.hd.mp4"
   included_users:
     - Villhellm
-  # Dark Sky is just an example, you do not need Dark Sky for this to work
-  entity: "weather.dark_sky"
+  # This entity is just an example, use whatever entity you would like
+  entity: "weather.home"
   state_url:
     'sunny':
       - "https://cdn.flixel.com/flixel/hlhff0h8md4ev0kju5be.hd.mp4"
