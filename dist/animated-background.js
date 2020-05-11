@@ -427,6 +427,14 @@ function renderBackgroundHTML() {
   var html_to_render;
   if (state_url != "" && Hui) {
     var bg = Hui.shadowRoot.getElementById("background-iframe");
+    var video_type = urlIsVideo(state_url);
+    var doc_body;
+    if(video_type){
+      doc_body = `<video id='cinemagraph' autoplay='' loop='' preload='' playsinline='' muted='' poster=''><source src='${state_url}' type='video/${video_type}'></video>`
+    }
+    else{
+      doc_body = `<img src='${state_url}'>`      
+    }
     var source_doc = `
     <html>
     <head>
@@ -451,12 +459,21 @@ function renderBackgroundHTML() {
           left: 50%;
           transform: translate(-50%, -50%);
         }
+
+        img {
+          min-width: 100%;
+          min-height: 100%;
+          width: auto;
+          height: auto;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
       </style>
     </head>  
-    <body>
-      <video id='cinemagraph' autoplay='' loop='' preload='' playsinline='' muted='' poster=''>
-        <source src='${state_url}' type='video/mp4'>
-      </video>
+    <body id='source-body'>
+    ${doc_body}
     </body>
     </html>`;
     if (!bg) {
@@ -485,7 +502,6 @@ function renderBackgroundHTML() {
       Previous_Url = state_url;
     }
     else {
-      html_to_render = `<source src='${state_url}' type='video/mp4'>`;
       if (current_config.entity || (Previous_Url != state_url)) {
         if (!current_config.entity) {
           STATUS_MESSAGE("Applying default background", true);
@@ -497,6 +513,16 @@ function renderBackgroundHTML() {
       }
     }
   }
+}
+
+function urlIsVideo(url){
+  if(url.slice(url.length - 3).toLowerCase() == "mp4" || url.slice(url.length - 4).toLowerCase() == "webm"){
+    return url.slice(url.length - 3).toLowerCase();
+  }
+  if(url.slice(url.length - 4).toLowerCase() == "webm"){
+    return url.slice(url.length - 4).toLowerCase();
+  }
+  return false;
 }
 
 //removes lovelace theme background
