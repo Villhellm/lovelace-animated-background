@@ -526,9 +526,13 @@ function urlIsVideo(url){
 }
 
 //removes lovelace theme background
-function removeDefaultBackground(node) {
-  if (node.style.background != 'transparent' || View_Layout.style.background != 'transparent') {
-    node.style.background = 'transparent';
+function removeDefaultBackground(node, current_config) {
+  var background = 'transparent';
+  if(current_config.background){
+    background = current_config.background;
+  }
+  if (node.style.background != background || View_Layout.style.background != 'transparent') {
+    node.style.background = background;
     View_Layout.style.background = 'transparent';
   }
 }
@@ -565,7 +569,7 @@ function processDefaultBackground(temp_enabled) {
             iphone_bullshit_fixer = view_node_panel;
           }
           if (temp_enabled) {
-            removeDefaultBackground(iphone_bullshit_fixer);
+            removeDefaultBackground(iphone_bullshit_fixer, current_config);
             DEBUG_MESSAGE("Removing view background for configuration:", currentConfig(), true);
           }
           else {

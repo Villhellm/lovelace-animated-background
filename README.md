@@ -319,6 +319,7 @@ views:
 | included_devices | list (string) | **Optional** | List of devices that will display animated background. If this option is set any devices not included in this list will be excluded. Ex:  iphone, ipad, windows, macintosh, android
 | excluded_users | list (string) | **Optional** | Users to be excluded
 | excluded_devices | list (string) | **Optional** | Devices to be excluded Ex:  iphone, ipad, windows, macintosh, android
+| background | string | **Optional** | CSS option for the background overlay. Default is 'transparent'
 
 ## Example if you want a different background for night and day when a switch changes (or any combination of entities)
 A few people have asked about tying this to multiple entities. The good news is this is already possible with the use of a template sensor. Here is an example of a template sensor that would allow a different background for night/day when a bedroom switch changes.
