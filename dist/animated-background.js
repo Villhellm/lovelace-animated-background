@@ -336,9 +336,6 @@ function getEntityState(entity) {
 
 //main render function
 function renderBackgroundHTML() {
-  if(!View_Layout){
-    return;
-  }
   var current_config = currentConfig();
   var state_url = "";
   var temp_enabled = true;
@@ -483,7 +480,8 @@ function renderBackgroundHTML() {
       if (!current_config.entity) {
         STATUS_MESSAGE("Applying default background", true);
       }
-      html_to_render = `<style>
+      var style = document.createElement("style");
+      style.innerHTML = `
       .bg-video{
           min-width: 100vw; 
           min-height: 100vh;
@@ -496,12 +494,15 @@ function renderBackgroundHTML() {
           min-width: 100vw; 
           min-height: 100vh;
           z-index: -10;
-      }    
-    </style>
-    <div id="background-video" class="bg-wrap">
+      }`;
+      var div = document.createElement("div");
+      div.id = "background-video";
+      div.className = "bg-wrap"
+      div.innerHTML = `
      <iframe id="background-iframe" class="bg-video" frameborder="0" srcdoc="${source_doc}"/> 
-    </div>`;
-      View_Layout.insertAdjacentHTML("beforebegin", html_to_render);
+    `;
+      Root.shadowRoot.appendChild(style);
+      Root.shadowRoot.appendChild(div)
       Previous_Url = state_url;
     }
     else {
@@ -530,9 +531,6 @@ function urlIsVideo(url) {
 
 //removes lovelace theme background
 function removeDefaultBackground(node, current_config) {
-  if(!View_Layout){
-    return;
-  }
   var background = 'transparent';
   if (current_config.background) {
     background = current_config.background;
@@ -545,9 +543,6 @@ function removeDefaultBackground(node, current_config) {
 
 //restores lovelace theme background
 function restoreDefaultBackground(node) {
-  if(!View_Layout){
-    return;
-  }
   View_Layout.style.background = null;
   node.style.background = null;
 }
