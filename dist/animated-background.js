@@ -336,6 +336,9 @@ function getEntityState(entity) {
 
 //main render function
 function renderBackgroundHTML() {
+  if(!View_Layout){
+    return;
+  }
   var current_config = currentConfig();
   var state_url = "";
   var temp_enabled = true;
@@ -527,6 +530,9 @@ function urlIsVideo(url) {
 
 //removes lovelace theme background
 function removeDefaultBackground(node, current_config) {
+  if(!View_Layout){
+    return;
+  }
   var background = 'transparent';
   if (current_config.background) {
     background = current_config.background;
@@ -539,6 +545,9 @@ function removeDefaultBackground(node, current_config) {
 
 //restores lovelace theme background
 function restoreDefaultBackground(node) {
+  if(!View_Layout){
+    return;
+  }
   View_Layout.style.background = null;
   node.style.background = null;
 }
