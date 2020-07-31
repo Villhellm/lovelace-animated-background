@@ -480,7 +480,8 @@ function renderBackgroundHTML() {
       if (!current_config.entity) {
         STATUS_MESSAGE("Applying default background", true);
       }
-      html_to_render = `<style>
+      var style = document.createElement("style");
+      style.innerHTML = `
       .bg-video{
           min-width: 100vw; 
           min-height: 100vh;
@@ -493,12 +494,15 @@ function renderBackgroundHTML() {
           min-width: 100vw; 
           min-height: 100vh;
           z-index: -10;
-      }    
-    </style>
-    <div id="background-video" class="bg-wrap">
+      }`;
+      var div = document.createElement("div");
+      div.id = "background-video";
+      div.className = "bg-wrap"
+      div.innerHTML = `
      <iframe id="background-iframe" class="bg-video" frameborder="0" srcdoc="${source_doc}"/> 
-    </div>`;
-      View_Layout.insertAdjacentHTML("beforebegin", html_to_render);
+    `;
+      Root.shadowRoot.appendChild(style);
+      Root.shadowRoot.appendChild(div)
       Previous_Url = state_url;
     }
     else {
