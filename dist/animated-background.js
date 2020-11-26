@@ -206,6 +206,10 @@ function currentConfig() {
 //logic for checking if enabled in configuration
 function enabled() {
   var temp_enabled = false;
+  var excluded = {
+    user: false,
+    device: false
+  }
   if (Animated_Config) {
     if (Animated_Config.default_url || Animated_Config.entity || Animated_Config.views || Animated_Config.groups) {
       temp_enabled = true;
@@ -229,93 +233,80 @@ function enabled() {
   //Root configuration exceptions
   if (Animated_Config.excluded_devices) {
     if (Animated_Config.excluded_devices.some(deviceIncluded)) {
-      if (temp_enabled) {
-        DEBUG_MESSAGE("Current device is excluded", null, true);
-        temp_enabled = false;
-      }
+      DEBUG_MESSAGE("Current device is excluded", null, true);
+      excluded.device = true;
     }
   }
 
   if (Animated_Config.excluded_users) {
     if (Animated_Config.excluded_users.map(username => username.toLowerCase()).includes(Haobj.user.name.toLowerCase())) {
-      if (temp_enabled) {
-        DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is excluded", null, true);
-        temp_enabled = false;
-      }
+      DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is excluded", null, true);
+      excluded.user = true;
     }
   }
 
   if (Animated_Config.included_users) {
     if (Animated_Config.included_users.map(username => username.toLowerCase()).includes(Haobj.user.name.toLowerCase())) {
-      temp_enabled = true;
+      excluded.user = false;
     }
     else {
-      if (temp_enabled) {
-        DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is not included", null, true);
-        temp_enabled = false;
-      }
+      DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is not included", null, true);
+      excluded.user = true;
     }
   }
 
   if (Animated_Config.included_devices) {
     if (Animated_Config.included_devices.some(deviceIncluded)) {
-      temp_enabled = true;
+      excluded.device = false;
     }
     else {
-      if (temp_enabled) {
-        DEBUG_MESSAGE("Current device is not included", null, true);
-        temp_enabled = false;
-      }
+      DEBUG_MESSAGE("Current device is not included", null, true);
+      excluded.device = true;
     }
   }
 
   //Current config overrides (only does anything if curre_config and Animated_Config are different)
   if (current_config.excluded_devices) {
     if (current_config.excluded_devices.some(deviceIncluded)) {
-      if (temp_enabled) {
-        DEBUG_MESSAGE("Current device is excluded", null, true);
-        temp_enabled = false;
-      }
+      DEBUG_MESSAGE("Current device is excluded", null, true);
+      excluded.device = true;
     }
   }
 
   if (current_config.excluded_users) {
     if (current_config.excluded_users.map(username => username.toLowerCase()).includes(Haobj.user.name.toLowerCase())) {
-      if (temp_enabled) {
-        DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is excluded", null, true);
-        temp_enabled = false;
-      }
+      DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is excluded", null, true);
+      excluded.user = true;
     }
   }
 
   if (current_config.included_users) {
     if (current_config.included_users.map(username => username.toLowerCase()).includes(Haobj.user.name.toLowerCase())) {
-      temp_enabled = true;
+      excluded.user = false;
     }
     else {
-      if (temp_enabled) {
-        DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is not included", null, true);
-        temp_enabled = false;
-      }
+      DEBUG_MESSAGE("Current user: " + Haobj.user.name + " is not included", null, true);
+      excluded.user = true;
     }
   }
 
   if (current_config.included_devices) {
     if (current_config.included_devices.some(deviceIncluded)) {
-      temp_enabled = true;
+      excluded.device = false;
     }
     else {
-      if (temp_enabled) {
-        DEBUG_MESSAGE("Current device is not included", null, true);
-        temp_enabled = false;
-      }
+      DEBUG_MESSAGE("Current device is not included", null, true);
+      excluded.device = true;
     }
   }
 
+  if (Object.values(excluded).some(element => element == true)) {
+    temp_enabled = false;
+  }
   if (current_config.enabled == false) {
     temp_enabled = false;
   }
-  if (current_config.enabled == true) {
+  if (current_config.enabled == true && !Object.values(excluded).some(element => element == true)) {
     temp_enabled = true;
   }
 
@@ -448,7 +439,7 @@ function renderBackgroundHTML() {
           margin: 0;
           position: relative;
         }
-    
+
         video {
           min-width: 100%;
           min-height: 100%;
@@ -471,7 +462,7 @@ function renderBackgroundHTML() {
           transform: translate(-50%, -50%);
         }
       </style>
-    </head>  
+    </head>
     <body id='source-body'>
     ${doc_body}
     </body>
@@ -483,15 +474,15 @@ function renderBackgroundHTML() {
       var style = document.createElement("style");
       style.innerHTML = `
       .bg-video{
-          min-width: 100vw; 
+          min-width: 100vw;
           min-height: 100vh;
-          
+
       }
       .bg-wrap{
           position: fixed;
           right: 0;
           top: 0;
-          min-width: 100vw; 
+          min-width: 100vw;
           min-height: 100vh;
           z-index: -10;
       }`;
@@ -499,7 +490,7 @@ function renderBackgroundHTML() {
       div.id = "background-video";
       div.className = "bg-wrap"
       div.innerHTML = `
-     <iframe id="background-iframe" class="bg-video" frameborder="0" srcdoc="${source_doc}"/> 
+     <iframe id="background-iframe" class="bg-video" frameborder="0" srcdoc="${source_doc}"/>
     `;
       Root.shadowRoot.appendChild(style);
       Root.shadowRoot.appendChild(div)
