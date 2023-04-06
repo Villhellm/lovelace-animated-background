@@ -8,7 +8,6 @@ var Panel_Holder;
 var Hui;
 var Lovelace;
 var Animated_Config;
-var View_Layout;
 var Haobj = null;
 var View;
 var Debug_Mode = false;
@@ -56,7 +55,7 @@ function getVars() {
   Root = Root && Root.shadowRoot;
   Root = Root && Root.querySelector("home-assistant-main");
   Root = Root && Root.shadowRoot;
-  Root = Root && Root.querySelector("app-drawer-layout partial-panel-resolver");
+  Root = Root && Root.querySelector("app-drawer-layout partial-panel-resolver, ha-drawer partial-panel-resolver");
   Root = (Root && Root.shadowRoot) || Root;
   Root = Root && Root.querySelector("ha-panel-lovelace");
   if (Root) {
@@ -70,7 +69,6 @@ function getVars() {
     if (Lovelace) {
       Animated_Config = Lovelace.config.animated_background;
     }
-    View_Layout = Root.shadowRoot.getElementById("layout");
     View = Root.shadowRoot.getElementById("view");
   }
 }
@@ -535,15 +533,13 @@ function removeDefaultBackground(node, current_config) {
   if (current_config.background) {
     background = current_config.background;
   }
-  if (node.style.background != background || View_Layout.style.background != 'transparent') {
+  if (node.style.background != background) {
     node.style.background = background;
-    View_Layout.style.background = 'transparent';
   }
 }
 
 //restores lovelace theme background
 function restoreDefaultBackground(node) {
-  View_Layout.style.background = null;
   node.style.background = null;
 }
 
