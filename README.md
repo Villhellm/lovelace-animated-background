@@ -1,3 +1,8 @@
+# ADD CHAGES FOR HOMEASSISTANT VERSION 2023.04.0
+```Code
+Root = Root && Root.querySelector("app-drawer-layout partial-panel-resolver, ha-drawer partial-panel-resolver");
+```
+
 # MAJOR BREAKING CHANGE IN v0.5.0+
 YOUR ANIMATED BACKGROUND CONFIGURATION WILL NEED TO BE UPDATED, follow the new configuration guidelines below.
 

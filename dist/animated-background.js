@@ -56,7 +56,8 @@ function getVars() {
   Root = Root && Root.shadowRoot;
   Root = Root && Root.querySelector("home-assistant-main");
   Root = Root && Root.shadowRoot;
-  Root = Root && Root.querySelector("app-drawer-layout partial-panel-resolver");
+//  Root = Root && Root.querySelector("app-drawer-layout partial-panel-resolver");
+  Root = Root && Root.querySelector("app-drawer-layout partial-panel-resolver, ha-drawer partial-panel-resolver");
   Root = (Root && Root.shadowRoot) || Root;
   Root = Root && Root.querySelector("ha-panel-lovelace");
   if (Root) {
