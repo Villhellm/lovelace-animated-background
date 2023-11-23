@@ -82,7 +82,7 @@ views: ...
 
 ### Step 1
 
-Make sure you have [HACS](https://github.com/custom-components/hacs) installed, find Animated Background in the plug section, and install.
+Make sure you have [HACS](https://github.com/custom-components/hacs) installed, add https://github.com/dreimer1986/lovelace-animated-background as custom repo and find Animated Background in the plug section, and install.
 
 ### Step 2
 
